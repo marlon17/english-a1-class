@@ -1,689 +1,603 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>English A1 · Conversational Class</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css" />
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>English A1 · Conversational Scenarios</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f4f4f3;--surface:#fff;--s2:#f0f0ef;
+  --b:rgba(0,0,0,.1);--b2:rgba(0,0,0,.18);
+  --text:#1a1a1a;--t2:#555;--t3:#999;
+  --accent:#4F6EF7;--al:#EEF1FF;--ad:#3451D1;
+  --green:#22c55e;--red:#ef4444;--r:12px;--rs:8px;
+}
+@media(prefers-color-scheme:dark){
+  :root{--bg:#111;--surface:#1e1e1e;--s2:#262626;--b:rgba(255,255,255,.1);--b2:rgba(255,255,255,.2);--text:#f0f0f0;--t2:#aaa;--t3:#666;--al:#1a2550}
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:12px}
+.app{width:100%;max-width:500px;background:var(--surface);border-radius:var(--r);border:0.5px solid var(--b);overflow:hidden;display:flex;flex-direction:column;min-height:93dvh;box-shadow:0 4px 32px rgba(0,0,0,.08)}
+.screen{display:none;flex:1;flex-direction:column;overflow:hidden}
+.screen.on{display:flex}
 
-    :root {
-      --bg: #f5f5f4;
-      --surface: #ffffff;
-      --surface2: #f0f0ef;
-      --border: rgba(0,0,0,0.1);
-      --border2: rgba(0,0,0,0.18);
-      --text: #1a1a1a;
-      --text2: #666;
-      --text3: #999;
-      --accent: #4F6EF7;
-      --accent-light: #EEF1FF;
-      --accent-dark: #3451D1;
-      --success: #22c55e;
-      --danger: #ef4444;
-      --radius: 12px;
-      --radius-sm: 8px;
-    }
+.topbar{background:var(--surface);border-bottom:0.5px solid var(--b);padding:13px 18px;display:flex;align-items:center;gap:12px;flex-shrink:0}
+.av{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#4F6EF7,#8B5CF6);display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0;position:relative}
+.av .dot{width:10px;height:10px;border-radius:50%;background:var(--green);border:2px solid var(--surface);position:absolute;bottom:0;right:0}
+.tinfo{flex:1;overflow:hidden}
+.tname{font-size:14px;font-weight:600;color:var(--text)}
+.tsub{font-size:12px;color:var(--t3);display:flex;align-items:center;gap:4px;margin-top:1px}
+.wave{display:flex;align-items:center;gap:2px;height:13px}
+.wave b{width:3px;border-radius:2px;background:var(--accent);height:4px;display:block}
+.wave.on b{animation:wv .5s ease-in-out infinite alternate}
+.wave.on b:nth-child(2){animation-delay:.1s}
+.wave.on b:nth-child(3){animation-delay:.2s}
+.wave.on b:nth-child(4){animation-delay:.3s}
+@keyframes wv{to{height:13px}}
+.pill{font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;background:var(--al);color:var(--accent);white-space:nowrap}
 
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --bg: #1a1a1a;
-        --surface: #252525;
-        --surface2: #2e2e2e;
-        --border: rgba(255,255,255,0.1);
-        --border2: rgba(255,255,255,0.18);
-        --text: #f0f0f0;
-        --text2: #aaa;
-        --text3: #666;
-        --accent-light: #1e2a5e;
-      }
-    }
+/* VOICE SETUP */
+.setup{flex:1;padding:22px 18px;display:flex;flex-direction:column;gap:14px;overflow-y:auto}
+.sh{font-size:18px;font-weight:600;color:var(--text)}
+.ss{font-size:14px;color:var(--t2);line-height:1.6}
+.vlist{display:flex;flex-direction:column;gap:7px;max-height:320px;overflow-y:auto}
+.vi{display:flex;align-items:center;gap:10px;padding:10px 13px;border:0.5px solid var(--b);border-radius:var(--rs);background:var(--surface);cursor:pointer;transition:border-color .15s}
+.vi:hover{border-color:var(--accent)}
+.vi.sel{border-color:var(--accent);background:var(--al)}
+.vi.sel .vn{color:var(--accent)}
+.vn{font-size:14px;font-weight:500;color:var(--text);flex:1}
+.vt{font-size:11px;color:var(--t3);margin-top:1px}
+.vt .us{color:var(--accent);font-weight:500}
+.tbtn{padding:5px 11px;border-radius:10px;border:0.5px solid var(--b2);background:none;color:var(--t2);cursor:pointer;font-size:12px;display:flex;align-items:center;gap:4px;white-space:nowrap}
+.tbtn:hover{background:var(--s2)}
+.novox{padding:18px;text-align:center;color:var(--t2);font-size:14px;line-height:1.7;background:var(--s2);border-radius:var(--rs)}
+.gbtn{padding:14px;border-radius:var(--r);background:var(--accent);color:#fff;border:none;font-size:15px;font-weight:600;cursor:pointer;width:100%;margin-top:auto;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .15s}
+.gbtn:hover{background:var(--ad)}
+.gbtn:disabled{opacity:.4;cursor:default}
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: var(--bg);
-      min-height: 100dvh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-    }
+/* LOBBY */
+.lobby{flex:1;overflow-y:auto;padding:16px 16px 20px}
+.lh{font-size:17px;font-weight:600;color:var(--text);margin-bottom:4px}
+.ls{font-size:13px;color:var(--t3);margin-bottom:14px}
+.sgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sc{border:0.5px solid var(--b);border-radius:var(--r);background:var(--surface);cursor:pointer;padding:14px 12px 12px;transition:border-color .15s;display:flex;flex-direction:column;gap:5px}
+.sc:hover{border-color:var(--accent)}
+.sc-icon{width:38px;height:38px;border-radius:var(--rs);display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:2px}
+.sc-title{font-size:14px;font-weight:600;color:var(--text);line-height:1.3}
+.sc-sub{font-size:12px;color:var(--t3);line-height:1.4}
+.sc-foot{display:flex;align-items:center;justify-content:space-between;margin-top:4px}
+.lv{font-size:11px;font-weight:600;padding:3px 8px;border-radius:8px}
+.done-dot{width:8px;height:8px;border-radius:50%;background:var(--green)}
 
-    .shell {
-      width: 100%;
-      max-width: 520px;
-      background: var(--surface);
-      border-radius: var(--radius);
-      border: 0.5px solid var(--border);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      min-height: 92dvh;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
-    }
-
-    /* TOP BAR */
-    .topbar {
-      background: var(--surface);
-      border-bottom: 0.5px solid var(--border);
-      padding: 14px 18px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-shrink: 0;
-    }
-    .avatar {
-      width: 44px; height: 44px; border-radius: 50%;
-      background: linear-gradient(135deg, #4F6EF7, #8B5CF6);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 20px; flex-shrink: 0; position: relative;
-    }
-    .avatar .dot {
-      width: 10px; height: 10px; border-radius: 50%;
-      background: var(--success); border: 2px solid var(--surface);
-      position: absolute; bottom: 0; right: 0;
-    }
-    .tinfo { flex: 1; overflow: hidden; }
-    .tname { font-size: 15px; font-weight: 600; color: var(--text); white-space: nowrap; }
-    .tsub {
-      font-size: 12px; color: var(--text3);
-      display: flex; align-items: center; gap: 5px; margin-top: 1px;
-    }
-    .badge {
-      background: var(--accent-light); color: var(--accent);
-      font-size: 11px; font-weight: 600;
-      padding: 4px 10px; border-radius: 20px; white-space: nowrap;
-    }
-    .wave { display: flex; align-items: center; gap: 2px; height: 14px; }
-    .wave b {
-      width: 3px; border-radius: 3px; background: var(--accent);
-      height: 4px; display: block; transition: height .1s;
-    }
-    .wave.on b { animation: wv .5s ease-in-out infinite alternate; }
-    .wave.on b:nth-child(2) { animation-delay: .1s; }
-    .wave.on b:nth-child(3) { animation-delay: .2s; }
-    .wave.on b:nth-child(4) { animation-delay: .3s; }
-    @keyframes wv { to { height: 14px; } }
-
-    /* SETUP SCREEN */
-    .setup {
-      flex: 1; padding: 24px 18px;
-      display: flex; flex-direction: column; gap: 16px;
-      overflow-y: auto;
-    }
-    .setup-title { font-size: 18px; font-weight: 600; color: var(--text); }
-    .setup-sub { font-size: 14px; color: var(--text2); line-height: 1.6; }
-    .voice-list {
-      display: flex; flex-direction: column; gap: 8px;
-      max-height: 340px; overflow-y: auto;
-    }
-    .voice-item {
-      display: flex; align-items: center; gap: 10px;
-      padding: 11px 14px;
-      border: 0.5px solid var(--border); border-radius: var(--radius-sm);
-      background: var(--surface); cursor: pointer; transition: all .15s;
-    }
-    .voice-item:hover { border-color: var(--accent); }
-    .voice-item.selected { border-color: var(--accent); background: var(--accent-light); }
-    .voice-item.selected .vname { color: var(--accent); }
-    .vname { font-size: 14px; font-weight: 500; color: var(--text); flex: 1; }
-    .vtag { font-size: 11px; color: var(--text3); margin-top: 2px; }
-    .vtag .us { color: var(--accent); font-weight: 500; }
-    .test-btn {
-      padding: 6px 12px; border-radius: 12px;
-      border: 0.5px solid var(--border2);
-      background: transparent; color: var(--text2);
-      cursor: pointer; font-size: 12px; white-space: nowrap;
-      display: flex; align-items: center; gap: 4px;
-    }
-    .test-btn:hover { background: var(--surface2); }
-    .no-voice {
-      padding: 20px; text-align: center;
-      color: var(--text2); font-size: 14px; line-height: 1.7;
-      background: var(--surface2); border-radius: var(--radius-sm);
-    }
-    .start-btn {
-      padding: 14px; border-radius: var(--radius);
-      background: var(--accent); color: #fff;
-      border: none; font-size: 15px; font-weight: 600;
-      cursor: pointer; width: 100%; margin-top: auto;
-      display: flex; align-items: center; justify-content: center; gap: 8px;
-      transition: background .15s;
-    }
-    .start-btn:hover { background: var(--accent-dark); }
-    .start-btn:disabled { opacity: .4; cursor: default; }
-
-    /* CLASS SCREEN */
-    .class-screen {
-      flex: 1; display: none;
-      flex-direction: column; overflow: hidden;
-    }
-    .prog-row {
-      background: var(--surface); border-bottom: 0.5px solid var(--border);
-      padding: 8px 18px; display: flex; align-items: center; gap: 10px;
-      flex-shrink: 0;
-    }
-    .ptrack {
-      flex: 1; height: 5px; background: var(--surface2);
-      border-radius: 4px; overflow: hidden;
-    }
-    .pfill {
-      height: 100%; background: var(--accent);
-      border-radius: 4px; transition: width .4s;
-      width: 0%;
-    }
-    .plbl { font-size: 12px; color: var(--text3); white-space: nowrap; }
-
-    .chat {
-      flex: 1; overflow-y: auto; padding: 16px 18px;
-      display: flex; flex-direction: column; gap: 12px;
-    }
-    .row { display: flex; gap: 8px; align-items: flex-end; }
-    .row.u { flex-direction: row-reverse; }
-    .sav {
-      width: 30px; height: 30px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 14px; flex-shrink: 0;
-    }
-    .sav.b { background: linear-gradient(135deg, #4F6EF7, #8B5CF6); }
-    .sav.u { background: var(--surface2); border: 0.5px solid var(--border); }
-    .bub {
-      max-width: 80%; padding: 12px 16px;
-      font-size: 14px; line-height: 1.65;
-    }
-    .bub.b {
-      background: var(--surface);
-      border: 0.5px solid var(--border);
-      border-radius: 18px 18px 18px 4px;
-      color: var(--text);
-    }
-    .bub.u {
-      background: var(--accent);
-      color: #fff;
-      border-radius: 18px 18px 4px 18px;
-    }
-    .bub .tr { font-size: 12px; opacity: .55; margin-top: 5px; }
-    .rbtn {
-      display: inline-flex; align-items: center; gap: 4px;
-      margin-top: 7px; font-size: 11px; color: var(--accent);
-      background: none; border: none; cursor: pointer; padding: 0;
-    }
-    .typing-dots { display: flex; gap: 4px; padding: 2px 0; }
-    .typing-dots span {
-      width: 7px; height: 7px; border-radius: 50%;
-      background: var(--border2);
-      animation: dt .9s ease-in-out infinite;
-    }
-    .typing-dots span:nth-child(2) { animation-delay: .2s; }
-    .typing-dots span:nth-child(3) { animation-delay: .4s; }
-    @keyframes dt {
-      0%,80%,100% { transform: scale(.7); opacity: .4; }
-      40% { transform: scale(1); opacity: 1; }
-    }
-
-    .opts-row {
-      padding: 8px 18px 10px;
-      display: flex; flex-wrap: wrap; gap: 7px; flex-shrink: 0;
-    }
-    .opt {
-      padding: 9px 16px; border-radius: 20px;
-      border: 0.5px solid var(--accent);
-      background: var(--surface); color: var(--accent);
-      cursor: pointer; font-size: 13px; font-weight: 500;
-      transition: background .15s;
-    }
-    .opt:hover { background: var(--accent-light); }
-
-    .bbar {
-      background: var(--surface);
-      border-top: 0.5px solid var(--border);
-      padding: 10px 16px;
-      display: flex; align-items: center; gap: 8px;
-      flex-shrink: 0;
-    }
-    .mbtn {
-      width: 48px; height: 48px; border-radius: 50%;
-      background: var(--accent); border: none;
-      color: #fff; font-size: 20px; cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0; transition: all .2s; position: relative;
-    }
-    .mbtn.on { background: var(--danger); }
-    .mbtn.on::after {
-      content: ''; position: absolute; inset: -5px;
-      border-radius: 50%;
-      border: 2px solid rgba(239,68,68,.35);
-      animation: pr 1s ease-in-out infinite;
-    }
-    @keyframes pr {
-      0%,100% { transform: scale(1); }
-      50% { transform: scale(1.12); }
-    }
-    .tinp {
-      flex: 1; border: 0.5px solid var(--border2);
-      border-radius: 22px; padding: 10px 16px;
-      font-size: 14px; background: var(--surface2);
-      color: var(--text); outline: none;
-    }
-    .tinp:focus { border-color: var(--accent); background: var(--surface); }
-    .sbtn {
-      width: 40px; height: 40px; border-radius: 50%;
-      background: var(--accent); border: none;
-      color: #fff; cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 16px; flex-shrink: 0;
-    }
-    .sbtn:hover { background: var(--accent-dark); }
-
-    /* Scrollbar */
-    ::-webkit-scrollbar { width: 4px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
-  </style>
+/* CHAT */
+.chat-hdr{background:var(--surface);border-bottom:0.5px solid var(--b);padding:10px 16px;display:flex;align-items:center;gap:10px;flex-shrink:0}
+.bkbtn{width:32px;height:32px;border-radius:50%;border:0.5px solid var(--b2);background:none;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--t2);flex-shrink:0}
+.bkbtn:hover{background:var(--s2)}
+.si{flex:1;overflow:hidden}
+.stitle{font-size:14px;font-weight:600;color:var(--text)}
+.ssub{font-size:12px;color:var(--t3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prow{padding:7px 16px;background:var(--surface);border-bottom:0.5px solid var(--b);display:flex;align-items:center;gap:10px;flex-shrink:0}
+.ptr{flex:1;height:4px;background:var(--s2);border-radius:3px;overflow:hidden}
+.ptf{height:100%;background:var(--accent);border-radius:3px;transition:width .4s;width:0%}
+.ptl{font-size:12px;color:var(--t3);white-space:nowrap}
+.chat{flex:1;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.row{display:flex;gap:8px;align-items:flex-end}
+.row.u{flex-direction:row-reverse}
+.sav{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.sav.b{background:linear-gradient(135deg,#4F6EF7,#8B5CF6)}
+.sav.u{background:var(--s2);border:0.5px solid var(--b)}
+.bub{max-width:80%;padding:10px 14px;font-size:14px;line-height:1.65}
+.bub.b{background:var(--surface);border:0.5px solid var(--b);border-radius:16px 16px 16px 4px;color:var(--text)}
+.bub.u{background:var(--accent);color:#fff;border-radius:16px 16px 4px 16px}
+.bub .tr{font-size:12px;opacity:.55;margin-top:4px}
+.rbtn{display:inline-flex;align-items:center;gap:3px;margin-top:6px;font-size:11px;color:var(--accent);background:none;border:none;cursor:pointer;padding:0}
+.hint{font-size:12px;color:#92400e;background:#FFF7ED;border:0.5px solid #FDE68A;border-radius:10px;padding:5px 10px;margin-top:6px;display:inline-block;cursor:pointer}
+.dots{display:flex;gap:4px;padding:2px 0}
+.dots span{width:7px;height:7px;border-radius:50%;background:var(--b2);animation:dt .9s ease-in-out infinite}
+.dots span:nth-child(2){animation-delay:.2s}
+.dots span:nth-child(3){animation-delay:.4s}
+@keyframes dt{0%,80%,100%{transform:scale(.7);opacity:.4}40%{transform:scale(1);opacity:1}}
+.srow{padding:5px 16px 2px;display:flex;align-items:center;gap:8px;border-top:0.5px solid var(--b);flex-shrink:0}
+.srow label{font-size:12px;color:var(--t3);white-space:nowrap}
+.bbar{background:var(--surface);border-top:0.5px solid var(--b);padding:10px 14px;display:flex;align-items:center;gap:8px;flex-shrink:0}
+.mbtn{width:48px;height:48px;border-radius:50%;background:var(--accent);border:none;color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;transition:background .2s}
+.mbtn.on{background:var(--red)}
+.mbtn.on::after{content:'';position:absolute;inset:-5px;border-radius:50%;border:2px solid rgba(239,68,68,.3);animation:pr 1s ease-in-out infinite}
+@keyframes pr{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+.tinp{flex:1;border:0.5px solid var(--b2);border-radius:22px;padding:10px 14px;font-size:14px;background:var(--s2);color:var(--text);outline:none}
+.tinp:focus{border-color:var(--accent);background:var(--surface)}
+.sbtn{width:38px;height:38px;border-radius:50%;background:var(--accent);border:none;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.sbtn:hover{background:var(--ad)}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-thumb{background:var(--b2);border-radius:4px}
+</style>
 </head>
 <body>
-<div class="shell">
+<div class="app">
 
-  <!-- TOP BAR -->
-  <div class="topbar">
-    <div class="avatar">👩‍🏫<div class="dot"></div></div>
-    <div class="tinfo">
-      <div class="tname">Ms. Sarah <span style="font-weight:400;font-size:13px;color:var(--text2)">· English Tutor</span></div>
-      <div class="tsub">
-        <div class="wave" id="wave"><b></b><b></b><b></b><b></b></div>
-        <span id="stxt">American English · A1</span>
-      </div>
-    </div>
-    <div class="badge">Class 1 · Greetings</div>
+<div class="topbar">
+  <div class="av">👩‍🏫<div class="dot"></div></div>
+  <div class="tinfo">
+    <div class="tname">Ms. Sarah <span style="font-weight:400;font-size:13px;color:var(--t2)">· English Tutor</span></div>
+    <div class="tsub"><div class="wave" id="wave"><b></b><b></b><b></b><b></b></div><span id="stxt">American English · A1</span></div>
   </div>
-
-  <!-- SETUP SCREEN -->
-  <div class="setup" id="setup-screen">
-    <div class="setup-title">Escolha a voz americana 🇺🇸</div>
-    <div class="setup-sub">
-      Seu sistema tem as seguintes vozes em inglês disponíveis. Clique em
-      <strong>Testar</strong> para ouvir cada uma e escolha a que soa mais
-      americana e natural para você.<br><br>
-      <strong>Dica:</strong> Use o <strong>Microsoft Edge</strong> para ter acesso
-      às vozes neurais americanas (Jenny, Aria) — a qualidade é a melhor disponível.
-    </div>
-    <div class="voice-list" id="voice-list">
-      <div class="no-voice">Carregando vozes... aguarde.</div>
-    </div>
-    <button class="start-btn" id="start-btn" disabled onclick="startClass()">
-      <i class="ti ti-player-play"></i> Iniciar aula com esta voz
-    </button>
-  </div>
-
-  <!-- CLASS SCREEN -->
-  <div class="class-screen" id="class-screen">
-    <div class="prog-row">
-      <div class="ptrack"><div class="pfill" id="pfill"></div></div>
-      <div class="plbl" id="plbl">0 / 9</div>
-    </div>
-    <div class="chat" id="chat"></div>
-    <div class="opts-row" id="opts"></div>
-    <div style="padding: 6px 18px 2px; display:flex; align-items:center; gap:10px; border-top: 0.5px solid var(--border);">
-      <i class="ti ti-adjustments-horizontal" style="font-size:14px; color:var(--text3); flex-shrink:0;"></i>
-      <span style="font-size:12px; color:var(--text3); white-space:nowrap;">Pronúncia</span>
-      <span style="font-size:11px; color:var(--text3); white-space:nowrap;">Fácil</span>
-      <input type="range" min="0" max="100" step="5" value="45" id="sens-slider"
-        style="flex:1; accent-color:var(--accent);"
-        oninput="sensitivity=parseInt(this.value); document.getElementById('sens-val').textContent=getSensLabel(this.value)" />
-      <span style="font-size:11px; color:var(--text3); white-space:nowrap;">Difícil</span>
-      <span style="font-size:12px; font-weight:500; color:var(--accent); min-width:36px; text-align:right;" id="sens-val">Médio</span>
-    </div>
-    <div class="bbar">
-      <button class="mbtn" id="mbtn" onclick="toggleMic()" title="Clique para falar em inglês">
-        <i class="ti ti-microphone"></i>
-      </button>
-      <input class="tinp" type="text" id="tinp" placeholder="Ou escreva em inglês..." onkeydown="if(event.key==='Enter')sendTxt()" />
-      <button class="sbtn" onclick="sendTxt()"><i class="ti ti-send"></i></button>
-    </div>
-  </div>
-
+  <div class="pill" id="top-pill">A1 Level</div>
 </div>
 
+<!-- VOICE SETUP -->
+<div class="screen on" id="s-voice">
+  <div class="setup">
+    <div class="sh">Choose your American voice</div>
+    <div class="ss">Click <strong>Test</strong> to preview each voice. For the best quality use <strong>Microsoft Edge</strong> — voices Jenny, Aria, or Ana are closest to a natural American accent.</div>
+    <div class="vlist" id="vlist"><div class="novox">Loading voices...</div></div>
+    <button class="gbtn" id="gbtn" disabled onclick="gotoLobby()"><i class="ti ti-arrow-right"></i> Start practicing</button>
+  </div>
+</div>
+
+<!-- LOBBY -->
+<div class="screen" id="s-lobby">
+  <div class="lobby">
+    <div class="lh">Choose a situation</div>
+    <div class="ls">Real conversations — speak or type freely in English</div>
+    <div class="sgrid" id="sgrid"></div>
+  </div>
+</div>
+
+<!-- CHAT -->
+<div class="screen" id="s-chat">
+  <div class="chat-hdr">
+    <button class="bkbtn" onclick="gotoLobby()"><i class="ti ti-arrow-left"></i></button>
+    <div class="si"><div class="stitle" id="sc-title">Scenario</div><div class="ssub" id="sc-sub"></div></div>
+  </div>
+  <div class="prow"><div class="ptr"><div class="ptf" id="ptf"></div></div><div class="ptl" id="ptl">0 / 0</div></div>
+  <div class="chat" id="chat"></div>
+  <div class="srow">
+    <i class="ti ti-adjustments-horizontal" style="font-size:13px;color:var(--t3)"></i>
+    <label>Easy</label>
+    <input type="range" min="0" max="100" step="5" value="40" id="sens" style="flex:1;accent-color:var(--accent)" oninput="sensitivity=+this.value;document.getElementById('slbl').textContent=slabel(+this.value)"/>
+    <label>Strict</label>
+    <span style="font-size:12px;font-weight:500;color:var(--accent);min-width:40px;text-align:right" id="slbl">Medium</span>
+  </div>
+  <div class="bbar">
+    <button class="mbtn" id="mbtn" onclick="toggleMic()"><i class="ti ti-microphone"></i></button>
+    <input class="tinp" id="tinp" type="text" placeholder="Say or type something in English..." onkeydown="if(event.key==='Enter')sendTxt()"/>
+    <button class="sbtn" onclick="sendTxt()"><i class="ti ti-send"></i></button>
+  </div>
+</div>
+
+</div>
 <script>
-  const lesson = [
-    { en:"Hey! Welcome to your first English class! I'm Ms. Sarah, your American tutor. Today we're learning greetings. Are you ready?", pt:"Bem-vindo! Sou Ms. Sarah, sua tutora americana. Hoje aprenderemos saudações. Pronto?", opts:["Yes, I'm ready!","Let's do this!","I'm so excited!"] },
-    { en:"Awesome! Let's start with the basics. The most common greeting is — Hello! Say it with me: Hello! Now, how do you say 'Bom dia' in English?", pt:"Vamos começar! A saudação mais comum é 'Hello'. Como se diz 'Bom dia'?", opts:["Good morning!","Good night!","Good evening!"], c:0 },
-    { en:"Perfect! Good morning! Americans say this before noon. Now — how do you ask someone 'Como você está?' in English?", pt:"Perfeito! Agora, como se pergunta 'Como você está?'", opts:["How are you?","What is your name?","Where are you from?"], c:0 },
-    { en:"Great question! Now if someone asks you 'How are you?' — what do you say back?", pt:"Se alguém perguntar 'How are you?', o que você responde?", opts:["I'm doing great, thanks!","I'm fine, thank you!","Not bad, and you?"] },
-    { en:"Love that energy! Now — introductions! In America, when you meet someone new, you say: Hi! My name is Sarah. What's your name? Try introducing yourself!", pt:"Agora vamos às apresentações! Como você se apresenta?", opts:["Hi! My name is... Nice to meet you!","I am from Brazil!","Good morning!"], c:0 },
-    { en:"Wonderful! And the response to 'Nice to meet you' is always 'Nice to meet you too!' Now let's do a full dialogue. I'll start: Hey! What's up?", pt:"Ótimo! Agora um diálogo completo. Eu começo: 'Hey! What's up?'", opts:["Hey! I'm doing good, and you?","Goodbye!","Good morning!"], c:0 },
-    { en:"I'm great, thanks! So — what is your name?", pt:"O que você responde?", opts:["My name is... and yours?","See you later!","Take care!"], c:0 },
-    { en:"Nice! And where are you from?", pt:"De onde você é?", opts:["I'm from Brazil! Nice to meet you!","Good evening!","Bye bye!"], c:0 },
-    { en:"Brazil! That's amazing! Alright, it's time to wrap up. How do you say goodbye?", pt:"Que legal! Como você se despede?", opts:["Goodbye! See you soon!","It was great meeting you! Take care!","Bye! Have a great day!"] },
-    { en:"Absolutely perfect! You just finished your first English conversation! You nailed greetings, introductions, and farewells — all in American English. You're doing amazing!", pt:"Parabéns! Você completou a primeira aula! Saudações, apresentações e despedidas — perfeito!", opts:["Thank you, Ms. Sarah!","Can we do it again?","That was awesome!"] },
-  ];
-
-  let selectedVoice = null;
-  let allEnVoices = [];
-  let step = 0;
-  let locked = false;
-  let recog = null;
-  let micOn = false;
-  let silenceTimer = null;
-  let autoMicTimer = null;
-  let sensitivity = 45; // 0=muito fácil, 100=muito difícil
-
-  function norm(s) {
-    return s.toLowerCase().replace(/[^a-z0-9 ]/g, '').trim();
+const SCENARIOS = [
+  {
+    id:'meeting', icon:'🤝', color:'#4F6EF7',
+    title:'First Meeting', sub:'Meet a new classmate',
+    turns:[
+      { ai:"Hey! I don't think we've met. I'm Jake, from New York.", pt:"Ei! Acho que a gente não se conhece. Sou Jake, de Nova York.", hint:"Introduce yourself — say your name and where you're from.",
+        p:[{k:['name','i\'m','i am','my name'],r:"Nice to meet you! Where are you from?"},
+           {k:['hi','hello','hey','good'],r:"Hey! What's your name?"},
+           {k:['brazil','brasil','from'],r:"Oh wow, Brazil! I'd love to visit. How long have you been learning English?"}],
+        fall:"I didn't catch that — what's your name?" },
+      { ai:"Nice to meet you! And where are you from?", pt:"Prazer! De onde você é?", hint:"Tell Jake your country or city.",
+        p:[{k:['brazil','brasil','rio','paulo','curitiba','belo'],r:"Brazil! Amazing! Is this your first time living abroad or studying English intensively?"},
+           {k:['from','i\'m from','i am from','live'],r:"Oh cool! How long have you been learning English?"}],
+        fall:"Sorry — where did you say you were from?" },
+      { ai:"How long have you been studying English?", pt:"Há quanto tempo você estuda inglês?", hint:"Say how long — months, years, or that you just started.",
+        p:[{k:['month','months'],r:"That's great! A few months in and you're already having conversations — impressive!"},
+           {k:['year','years'],r:"Awesome! Years of practice really show. What made you decide to study English?"},
+           {k:['start','just','begin','new','recently','week'],r:"Just starting out — that's exciting! What made you want to learn?"}],
+        fall:"Well your English sounds great already! What do you like to do outside of studying?" },
+      { ai:"What do you like to do when you're not studying?", pt:"O que você gosta de fazer quando não está estudando?", hint:"Talk about a hobby — music, sport, movies, travel, cooking...",
+        p:[{k:['music','play','guitar','sing','band','piano'],r:"You're musical! I play guitar too. Do you listen to a lot of English music?"},
+           {k:['sport','soccer','football','gym','run','swim','tennis'],r:"Nice, I love sports too! Do you watch sports in English or Portuguese?"},
+           {k:['movie','series','netflix','watch','film','tv','show'],r:"Movies are honestly the best way to learn! What's your favorite English series?"},
+           {k:['travel','trip','visit','country','place'],r:"A traveler! Have you ever been to an English-speaking country?"},
+           {k:['read','book','game','cook','food','art','draw'],r:"That's great! Do you ever do that in English — like reading books or watching tutorials?"}],
+        fall:"Sounds fun! Have you tried doing any of your hobbies in English?" },
+      { ai:"Any plans to visit an English-speaking country soon?", pt:"Planos de visitar um país de língua inglesa em breve?", hint:"Talk about travel plans or dreams — USA, UK, Canada, Australia...",
+        p:[{k:['usa','america','new york','los angeles','miami','california'],r:"The US is incredible — so much to see! New York, Miami, LA... hope you make it soon!"},
+           {k:['uk','england','london','britain'],r:"London is amazing — though fair warning, the British accent is very different from American English!"},
+           {k:['canada','toronto','vancouver','australia'],r:"Great choice! Both Canada and Australia are very welcoming to international visitors."},
+           {k:['yes','want','dream','plan','hope','soon'],r:"You should go! Immersion in an English-speaking country accelerates learning so fast."},
+           {k:['no','not yet','maybe','someday','one day'],r:"You'll get there! In the meantime, conversations like this one really do help."}],
+        fall:"Wherever you go, your English will get you far! It was really nice meeting you today." },
+      { ai:"It was so great chatting with you! I hope we can practice English together more often. See you around!", pt:"Foi muito bom conversar! Espero que possamos praticar mais. Até logo!", hint:"Say goodbye in a friendly, natural way.",
+        p:[{k:['nice','great','too','as well','pleasure','likewise'],r:"Take care! See you in class!"},
+           {k:['bye','goodbye','see you','later','soon','ciao'],r:"Bye! Have a wonderful day!"},
+           {k:['thanks','thank'],r:"Anytime! Keep practicing — you're doing amazing!"}],
+        fall:"Great chatting! Take care!" }
+    ]
+  },
+  {
+    id:'coffee', icon:'☕', color:'#B45309',
+    title:'Coffee Shop', sub:'Order and make small talk',
+    turns:[
+      { ai:"Welcome to Morning Brew! What can I get for you today?", pt:"Bem-vindo ao Morning Brew! O que posso trazer?", hint:"Order a drink — coffee, latte, cappuccino, tea...",
+        p:[{k:['coffee','americano','black'],r:"Great choice! What size would you like — small, medium, or large?"},
+           {k:['latte','cappuccino','flat white','macchiato'],r:"Excellent taste! What size — small, medium, or large?"},
+           {k:['espresso'],r:"A true espresso lover! Single or double shot?"},
+           {k:['tea','green','chai','chamomile'],r:"A tea drinker! We have green, black, chamomile, and chai. Which one?"}],
+        fall:"I'm sorry, could you repeat that? What would you like to order?" },
+      { ai:"What size would you like?", pt:"Qual tamanho?", hint:"Choose: small, medium, or large.",
+        p:[{k:['small','little','short','mini'],r:"Small, perfect! Any milk or sugar with that?"},
+           {k:['medium','regular','normal'],r:"Medium, good choice! Milk, cream, or sugar?"},
+           {k:['large','big','tall','grande','extra'],r:"Large — I like your style! Anything in it?"}],
+        fall:"I'll make it a medium. Any milk or sugar?" },
+      { ai:"Would you like anything to eat? We have croissants, muffins, and sandwiches today.", pt:"Gostaria de comer algo? Temos croissants, muffins e sanduíches.", hint:"Order food or politely decline.",
+        p:[{k:['croissant'],r:"Croissants are baked fresh every morning here — great choice!"},
+           {k:['muffin'],r:"Amazing choice! We have blueberry and chocolate chip — which would you prefer?"},
+           {k:['sandwich'],r:"Our sandwiches are really popular! Turkey, chicken, or vegetarian?"},
+           {k:['no','nothing','just','only','that\'s all','not'],r:"No worries! So just the drink. For here or to go?"}],
+        fall:"No problem! For here or to go?" },
+      { ai:"For here or to go?", pt:"Para consumir aqui ou para viagem?", hint:"Say 'for here' or 'to go'.",
+        p:[{k:['here','sit','inside','stay','table','dine'],r:"Perfect! There's a lovely spot by the window. I'll bring it right over."},
+           {k:['go','take','away','takeout','out'],r:"To go it is! I'll have that ready in just a minute."}],
+        fall:"Coming right up!" },
+      { ai:"While I make your order — are you visiting the area or do you live nearby?", pt:"Enquanto preparo — você está visitando ou mora por aqui?", hint:"Tell the barista a bit about yourself.",
+        p:[{k:['visit','tourist','travelling','vacation','holiday','trip'],r:"A visitor! Welcome! How long are you here for?"},
+           {k:['live','local','here','nearby','neighborhood'],r:"A local! Do you come here often? This is one of my favorite cafes to work at."},
+           {k:['study','student','school','university','college','class'],r:"A student! That's great — what are you studying?"},
+           {k:['work','job','office','business','company'],r:"Do you work nearby? A lot of regulars here are from the offices around the corner."}],
+        fall:"Well, welcome! Your order is almost ready." },
+      { ai:"Here you go! Enjoy. Have a wonderful day!", pt:"Aqui está! Aproveite. Tenha um ótimo dia!", hint:"Thank the barista and say goodbye.",
+        p:[{k:['thank','thanks'],r:"You're very welcome! Come back soon!"},
+           {k:['bye','see you','goodbye','later'],r:"Bye! Hope to see you again!"},
+           {k:['great','perfect','amazing','wonderful','awesome','looks good'],r:"So glad! Enjoy every sip. Have a great day!"}],
+        fall:"Thanks for stopping by! Take care!" }
+    ]
+  },
+  {
+    id:'business', icon:'💼', color:'#0891B2',
+    title:'Business Meeting', sub:'Professional introduction',
+    turns:[
+      { ai:"Good morning everyone. Before we dive in, let's do quick introductions. Please go ahead.", pt:"Bom dia a todos. Antes de começar, vamos nos apresentar. Pode ir.", hint:"Say your name, your role, and your department or company.",
+        p:[{k:['name','i\'m','i am','work','manager','developer','analyst','designer','lead'],r:"Great, welcome to the team! How long have you been in this role?"},
+           {k:['morning','hello','hi','good morning'],r:"Good morning! Please introduce yourself to the group — name and role."},
+           {k:['brazil','brasil','international','remote'],r:"Welcome! Great to have international team members. What's your role?"}],
+        fall:"Thank you — could you also tell us your role and what team you're on?" },
+      { ai:"And how long have you been with the company?", pt:"E há quanto tempo você está na empresa?", hint:"Say how long and mention what you work on.",
+        p:[{k:['month','months'],r:"Relatively new — great! What project are you currently focused on?"},
+           {k:['year','years'],r:"Quite some experience here! You must know the company inside out. What's your current project?"},
+           {k:['week','just','new','recently','started'],r:"Brand new — welcome aboard! What team are you joining?"}],
+        fall:"Good to know! And what are you currently working on?" },
+      { ai:"What are your main responsibilities in this role?", pt:"Quais são suas principais responsabilidades?", hint:"Describe your day-to-day work — what you do and who you work with.",
+        p:[{k:['develop','code','software','app','backend','frontend','engineering'],r:"Technical work — essential to everything we build. Do you collaborate closely with design or product?"},
+           {k:['design','ux','ui','user','creative','visual'],r:"Design is at the heart of the product experience. What tools do you mainly use?"},
+           {k:['data','analysis','report','metrics','analytics'],r:"Data drives so many decisions here. What stack or tools do you work with?"},
+           {k:['sales','client','customer','marketing','brand','account'],r:"Client relationships are everything. How do you typically handle communication with international clients?"},
+           {k:['manage','lead','team','coordinate','organize','plan'],r:"A leadership role — valuable! How big is the team you manage?"}],
+        fall:"That sounds like important work! How do you typically collaborate with other teams?" },
+      { ai:"What are your main goals for today's meeting?", pt:"Quais são seus principais objetivos para a reunião de hoje?", hint:"Say what you want to discuss, decide, or achieve.",
+        p:[{k:['learn','understand','update','info','align','context'],r:"Great — we'll make sure to cover that. Any specific topic you'd like to prioritize?"},
+           {k:['discuss','share','talk','brainstorm','ideas','feedback'],r:"Love the collaborative spirit! What's the biggest challenge you'd like the team's input on?"},
+           {k:['present','show','proposal','plan','pitch'],r:"We'd love to see it! How much time do you need for your presentation?"},
+           {k:['decide','decision','strategy','roadmap','direction'],r:"Absolutely — we need clear next steps by end of today. What's the most pressing decision?"}],
+        fall:"Good goals. Let's make sure we cover them. Anything you want to flag before we start?" },
+      { ai:"Perfect. Any questions before we begin?", pt:"Perfeito. Alguma pergunta antes de começarmos?", hint:"Ask something or say you're ready to start.",
+        p:[{k:['no','ready','go','start','begin','let\'s','all good'],r:"Great! Then let's get started. Thanks everyone for being here."},
+           {k:['agenda','schedule','plan','document','slide'],r:"I'm sharing the agenda on screen now — let's go through it together."},
+           {k:['question','how','when','who','what','where','why'],r:"Great point — we'll address that as we go through the agenda. Let's get started!"}],
+        fall:"Perfect! Then let's kick things off. Welcome everyone!" }
+    ]
+  },
+  {
+    id:'interview', icon:'🎯', color:'#059669',
+    title:'Job Interview', sub:'Practice self-introduction',
+    turns:[
+      { ai:"Good afternoon! Thanks for coming in. Please, take a seat. Could you start by telling me a little about yourself?", pt:"Boa tarde! Obrigado por vir. Pode se sentar. Pode começar se apresentando?", hint:"Give a short professional introduction — name, background, experience.",
+        p:[{k:['name','i\'m','work','experience','background','developer','designer','analyst','manager'],r:"Impressive background! How many years of professional experience do you have in total?"},
+           {k:['hello','hi','good afternoon','morning'],r:"Good afternoon! Please go ahead and tell us about your professional background."}],
+        fall:"Thank you. Could you walk me through your professional experience?" },
+      { ai:"What specifically attracted you to this position?", pt:"O que te atraiu especificamente para essa vaga?", hint:"Explain why this job interests you — company, role, growth opportunity...",
+        p:[{k:['company','team','culture','mission','product','brand','values'],r:"We love hearing that! What do you know about what we do here?"},
+           {k:['grow','learn','develop','opportunity','career','challenge','skill'],r:"Growth mindset — we value that a lot. What specific skill do you most want to develop in this role?"},
+           {k:['experience','match','fit','background','relevant','apply'],r:"It does sound like a strong fit! Can you give me a concrete example of relevant work you've done?"}],
+        fall:"Can you tell me more specifically what drew you to this role over others?" },
+      { ai:"Tell me about a challenge you faced at work and how you handled it.", pt:"Me fale sobre um desafio que você enfrentou no trabalho e como resolveu.", hint:"Use the STAR method — situation, task, action, result.",
+        p:[{k:['deadline','time','pressure','urgent','fast','deliver'],r:"Handling pressure well is critical. What was the final outcome of that situation?"},
+           {k:['team','colleague','conflict','disagree','communication','different'],r:"Interpersonal challenges are so common. How did things resolve between you?"},
+           {k:['technical','bug','system','error','crash','problem','issue'],r:"Technical problem-solving is a great skill. How long did it take to find the solution?"},
+           {k:['client','customer','stakeholder','feedback','complaint'],r:"Client situations can be very demanding. How did the client react to your resolution?"},
+           {k:['result','solved','fixed','success','outcome','learned'],r:"Great outcome! What was the biggest lesson you took away from that experience?"}],
+        fall:"That sounds like a real learning moment. What would you do differently now?" },
+      { ai:"Where do you see yourself professionally in three years?", pt:"Onde você se vê profissionalmente em três anos?", hint:"Talk about your career goals and ambitions.",
+        p:[{k:['lead','manage','senior','director','head','team'],r:"Leadership ambitions! We have good growth paths here. What kind of team would you want to build?"},
+           {k:['expert','specialist','master','deep','area','domain'],r:"Depth of expertise is very valuable. Which specific area do you want to go deep in?"},
+           {k:['company','stay','grow here','same','with you'],r:"Loyalty and long-term thinking — we appreciate that. What would keep you motivated here long-term?"}],
+        fall:"Ambitious goals. We appreciate that mindset. Do you have any questions for us about the role?" },
+      { ai:"Do you have any questions for us?", pt:"Você tem alguma pergunta para nós?", hint:"Ask something about the role, the team, or the company culture.",
+        p:[{k:['team','who','work with','size','people','colleague'],r:"You'd be joining a team of about eight — very collaborative, mostly async communication."},
+           {k:['day','typical','routine','daily','week'],r:"Typically you'd start with a standup, deep work in the morning, and syncs in the afternoon."},
+           {k:['culture','value','environment','believe','principle'],r:"Transparency, autonomy, and continuous learning are our three core values. Does that resonate with you?"},
+           {k:['next','step','process','when','hear','timeline'],r:"We'll be in touch within the week. Thank you so much — it was a real pleasure meeting you!"},
+           {k:['no','that\'s all','nothing','good','fine'],r:"Perfect! It was wonderful meeting you. We'll be in touch very soon. Safe travels!"}],
+        fall:"Great question — we'll cover that if we move forward. Thank you so much for coming in today!" }
+    ]
+  },
+  {
+    id:'airport', icon:'✈️', color:'#7C3AED',
+    title:'Airport Check-in', sub:'Travel vocabulary in action',
+    turns:[
+      { ai:"Good morning! Welcome to United Airlines. Could I see your passport, please?", pt:"Bom dia! Bem-vindo à United Airlines. Posso ver seu passaporte?", hint:"Hand over your passport and confirm your destination.",
+        p:[{k:['here','passport','document','yes','sure','of course','take'],r:"Thank you! And where are you flying to today?"},
+           {k:['new york','london','miami','los angeles','chicago','orlando','boston'],r:"Wonderful destination! Is that your final stop or a connecting flight?"}],
+        fall:"Could I see your travel document, please?" },
+      { ai:"How many bags are you checking in today?", pt:"Quantas malas você vai despachar hoje?", hint:"Say the number — 'one bag', 'two bags', or 'just carry-on'.",
+        p:[{k:['one','1','a bag','single','just one'],r:"Just one — perfect! Could you place it on the scale?"},
+           {k:['two','2','both','couple'],r:"Two bags! Let me check the weight allowance. Please put them on the scale."},
+           {k:['no','none','carry','hand','just','only'],r:"Just carry-on — very efficient! Window or aisle seat today?"}],
+        fall:"Please put your bag on the scale so we can check the weight." },
+      { ai:"Window or aisle seat?", pt:"Janela ou corredor?", hint:"Say your preference and why if you'd like.",
+        p:[{k:['window','view','look','see','outside','scenery'],r:"Window seat — great choice! You might see some beautiful views on this flight."},
+           {k:['aisle','walk','bathroom','stretch','move','leg'],r:"Aisle seat — totally practical, especially on longer flights."},
+           {k:['middle','no preference','any','either','don\'t mind'],r:"I'll put you somewhere comfortable near the front!"}],
+        fall:"I'll assign you a good seat with some legroom!" },
+      { ai:"Your flight departs from Gate 14B at 10:45 AM. Any questions about boarding?", pt:"Seu voo parte do Portão 14B às 10h45. Alguma dúvida sobre o embarque?", hint:"Ask about boarding time, security, or say you're all set.",
+        p:[{k:['when','time','board','boarding','start'],r:"Boarding begins at 10:05 AM — about 40 minutes before departure. I'd arrive at the gate by 10!"},
+           {k:['security','check','line','x-ray','queue'],r:"Security is just down this hallway, left turn. Allow about 25-30 minutes to get through."},
+           {k:['lounge','business','priority','access','vip'],r:"The lounge is available for business class passengers. Would you like me to check your eligibility?"},
+           {k:['no','ok','good','understand','got it','clear','thanks','fine'],r:"Perfect! Have a wonderful flight. Is there anything else I can help you with?"}],
+        fall:"Boarding typically starts 40 minutes before departure. Have a wonderful flight!" },
+      { ai:"Here are your boarding pass and passport. Have a wonderful flight and enjoy your trip!", pt:"Aqui estão seu cartão de embarque e passaporte. Tenha um ótimo voo!", hint:"Thank the agent and say a warm goodbye.",
+        p:[{k:['thank','thanks','you'],r:"You're very welcome! Safe travels — enjoy every moment!"},
+           {k:['bye','goodbye','see you','take care'],r:"Bye! Hope it's an amazing trip. Take care!"},
+           {k:['great','wonderful','perfect','amazing','awesome'],r:"So glad! Have an absolutely fantastic journey!"}],
+        fall:"Thanks for flying with us! Safe and happy travels!" }
+    ]
   }
+];
 
-  function similarity(a, b) {
-    const wa = norm(a).split(/\s+/).filter(Boolean);
-    const wb = norm(b).split(/\s+/).filter(Boolean);
-    if (!wa.length || !wb.length) return 0;
-    let matches = 0;
-    wa.forEach(w => { if (wb.some(x => x.includes(w) || w.includes(x))) matches++; });
-    return Math.round((matches / Math.max(wa.length, wb.length)) * 100);
+/* ── VOICE ── */
+let selectedVoice = null;
+let sensitivity = 40;
+let silenceTimer = null, autoMicTimer = null;
+let recog = null, micOn = false;
+
+function scoreVoice(v) {
+  const n = v.name.toLowerCase(); let s = 0;
+  if (v.lang === 'en-US') s += 100;
+  else if (v.lang.startsWith('en')) s += 40;
+  const names = ['samantha','ava','jenny','aria','allison','zira','susan','karen'];
+  names.forEach((nm,i) => { if (n.includes(nm)) s += 80 - i*5; });
+  if (/neural|natural|premium|enhanced/.test(n)) s += 25;
+  if (n.includes('compact')) s -= 10;
+  return s;
+}
+
+function loadVoices() {
+  const all = speechSynthesis.getVoices();
+  const en = all.filter(v => v.lang.startsWith('en')).sort((a,b) => scoreVoice(b)-scoreVoice(a));
+  const list = document.getElementById('vlist'), btn = document.getElementById('gbtn');
+  if (!en.length) { list.innerHTML = '<div class="novox">No English voices found. Please use <strong>Microsoft Edge</strong> or <strong>Chrome</strong>.</div>'; return; }
+  list.innerHTML = '';
+  en.forEach((v,i) => {
+    if (i === 0) selectedVoice = v;
+    const isUS = v.lang === 'en-US';
+    const d = document.createElement('div'); d.className = 'vi'+(i===0?' sel':'');
+    d.innerHTML = `<div style="flex:1"><div class="vn">${v.name}</div><div class="vt">${v.lang}${isUS?' · <span class="us">American ✓</span>':''}</div></div><button class="tbtn"><i class="ti ti-volume"></i> Test</button>`;
+    d.querySelector('.tbtn').addEventListener('click', e => { e.stopPropagation(); testVoice(v); });
+    d.addEventListener('click', () => { document.querySelectorAll('.vi').forEach(x=>x.classList.remove('sel')); d.classList.add('sel'); selectedVoice=v; btn.disabled=false; });
+    list.appendChild(d);
+  });
+  btn.disabled = false;
+}
+
+function testVoice(v) {
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance("Hello! I'm Ms. Sarah. It's great to meet you. Are you ready to practice your English today?");
+  u.voice = v; u.lang = v.lang; u.rate = 0.9; u.pitch = 1.05;
+  speechSynthesis.speak(u);
+}
+
+function speak(text, onEnd, autoMic) {
+  clearTimeout(autoMicTimer); stopMic(); speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  if (selectedVoice) { u.voice = selectedVoice; u.lang = selectedVoice.lang; }
+  else u.lang = 'en-US';
+  u.rate = 0.88; u.pitch = 1.05; u.volume = 1;
+  const w = document.getElementById('wave'), s = document.getElementById('stxt');
+  w.classList.add('on'); s.textContent = 'Speaking...';
+  u.onend = u.onerror = () => {
+    w.classList.remove('on');
+    s.textContent = selectedVoice ? selectedVoice.name.split(' ').slice(0,2).join(' ') : 'American English';
+    if (onEnd) onEnd();
+    if (autoMic) autoMicTimer = setTimeout(startMic, 1000);
+  };
+  speechSynthesis.speak(u);
+}
+
+/* ── MATCH ENGINE ── */
+function norm(s) { return s.toLowerCase().replace(/[^a-z0-9 ]/g,'').trim(); }
+
+function matchReply(input, patterns) {
+  const n = norm(input);
+  for (const p of patterns) {
+    if (p.k.some(k => n.includes(norm(k)))) return p.r;
   }
+  if (sensitivity <= 20) return patterns[0].r; // easy: always accept
+  return null;
+}
 
-  function matchOptByVoice(transcript, opts) {
-    let best = -1, bestScore = -1;
-    opts.forEach((o, i) => {
-      const score = similarity(transcript, o);
-      if (score > bestScore) { bestScore = score; best = i; }
-    });
-    return bestScore >= (100 - sensitivity) ? best : -1;
-  }
+/* ── SCENARIO STATE ── */
+let cur = null, turnIdx = 0, locked = false, missCount = 0;
+const done = new Set();
 
-  function scoreVoice(v) {
-    const n = v.name.toLowerCase();
-    let s = 0;
-    if (v.lang === 'en-US') s += 100;
-    else if (v.lang.startsWith('en')) s += 40;
-    if (n.includes('samantha')) s += 80;
-    if (n.includes('ava')) s += 75;
-    if (n.includes('allison')) s += 70;
-    if (n.includes('jenny')) s += 70;
-    if (n.includes('aria')) s += 68;
-    if (n.includes('zira')) s += 60;
-    if (n.includes('susan')) s += 55;
-    if (n.includes('karen')) s += 50;
-    if (n.includes('neural') || n.includes('natural')) s += 30;
-    if (n.includes('premium') || n.includes('enhanced')) s += 20;
-    if (n.includes('compact')) s -= 10;
-    return s;
-  }
+function show(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+}
 
-  function loadVoices() {
-    const all = speechSynthesis.getVoices();
-    allEnVoices = all.filter(v => v.lang.startsWith('en')).sort((a, b) => scoreVoice(b) - scoreVoice(a));
-    const list = document.getElementById('voice-list');
-    const btn = document.getElementById('start-btn');
-    if (allEnVoices.length === 0) {
-      list.innerHTML = '<div class="no-voice">Nenhuma voz em inglês encontrada.<br>Use <strong>Microsoft Edge</strong> ou <strong>Google Chrome</strong>.</div>';
-      return;
+function gotoLobby() {
+  stopMic(); speechSynthesis.cancel(); clearTimeout(autoMicTimer);
+  locked = false; cur = null;
+  renderLobby(); show('s-lobby');
+  document.getElementById('top-pill').textContent = 'A1 Level';
+}
+
+function renderLobby() {
+  const g = document.getElementById('sgrid'); g.innerHTML = '';
+  SCENARIOS.forEach(sc => {
+    const d = document.createElement('div'); d.className = 'sc';
+    const isDone = done.has(sc.id);
+    d.innerHTML = `<div class="sc-icon" style="background:${sc.color}22">${sc.icon}</div>
+      <div class="sc-title">${sc.title}</div>
+      <div class="sc-sub">${sc.sub}</div>
+      <div class="sc-foot"><span class="lv" style="background:${sc.color}22;color:${sc.color}">A1</span>${isDone?'<span class="done-dot" title="Completed"></span>':''}</div>`;
+    d.onclick = () => startScenario(sc);
+    g.appendChild(d);
+  });
+}
+
+function startScenario(sc) {
+  cur = sc; turnIdx = 0; locked = false; missCount = 0;
+  document.getElementById('sc-title').textContent = sc.title;
+  document.getElementById('sc-sub').textContent = sc.sub;
+  document.getElementById('top-pill').textContent = sc.title;
+  document.getElementById('chat').innerHTML = '';
+  document.getElementById('tinp').value = '';
+  updateProg(); show('s-chat'); runTurn();
+}
+
+function runTurn() {
+  if (!cur || turnIdx >= cur.turns.length) { endScenario(); return; }
+  const t = cur.turns[turnIdx];
+  locked = true; missCount = 0;
+  const delay = Math.min(1400, 700 + t.ai.length * 9);
+  showTyping();
+  setTimeout(() => {
+    rmTyping();
+    const bub = addMsg(t.ai, t.pt, 'b', true);
+    if (t.hint) {
+      const h = document.createElement('button');
+      h.className = 'hint';
+      h.innerHTML = '<i class="ti ti-bulb" style="font-size:13px;vertical-align:-2px;margin-right:3px"></i>Hint: ' + t.hint;
+      h.onclick = () => h.style.display = 'none';
+      bub.appendChild(h);
     }
-    list.innerHTML = '';
-    allEnVoices.forEach((v, i) => {
-      if (i === 0) selectedVoice = v;
-      const isUS = v.lang === 'en-US';
-      const item = document.createElement('div');
-      item.className = 'voice-item' + (i === 0 ? ' selected' : '');
-      item.innerHTML = `
-        <div style="flex:1">
-          <div class="vname">${v.name}</div>
-          <div class="vtag">${v.lang}${isUS ? ' · <span class="us">American English ✓</span>' : ''}</div>
-        </div>
-        <button class="test-btn"><i class="ti ti-volume"></i> Testar</button>`;
-      item.querySelector('.test-btn').addEventListener('click', e => {
-        e.stopPropagation();
-        testVoice(v);
-      });
-      item.addEventListener('click', () => {
-        document.querySelectorAll('.voice-item').forEach(el => el.classList.remove('selected'));
-        item.classList.add('selected');
-        selectedVoice = v;
-        btn.disabled = false;
-      });
-      list.appendChild(item);
-    });
-    btn.disabled = false;
-  }
+    updateProg();
+    speak(t.ai, () => { locked = false; }, true);
+  }, delay);
+}
 
-  function testVoice(voice) {
-    speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance("Hello! I'm Ms. Sarah, your American English tutor. Good morning, how are you today?");
-    u.voice = voice; u.lang = voice.lang; u.rate = 0.9; u.pitch = 1.05;
-    speechSynthesis.speak(u);
-  }
-
-  function speak(text, onEnd, autoMic) {
-    clearTimeout(autoMicTimer);
-    stopMic();
-    speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(text);
-    if (selectedVoice) { u.voice = selectedVoice; u.lang = selectedVoice.lang; }
-    else u.lang = 'en-US';
-    u.rate = 0.88; u.pitch = 1.05; u.volume = 1;
-    const w = document.getElementById('wave');
-    const s = document.getElementById('stxt');
-    w.classList.add('on');
-    s.textContent = 'Speaking...';
-    u.onend = u.onerror = () => {
-      w.classList.remove('on');
-      s.textContent = selectedVoice ? selectedVoice.name.split(' ').slice(0, 2).join(' ') : 'American English';
-      if (onEnd) onEnd();
-      if (autoMic) autoMicTimer = setTimeout(() => startMic(), 1000);
-    };
-    speechSynthesis.speak(u);
-  }
-
-  function startClass() {
-    document.getElementById('setup-screen').style.display = 'none';
-    const cs = document.getElementById('class-screen');
-    cs.style.display = 'flex';
-    if (selectedVoice) document.getElementById('stxt').textContent = selectedVoice.name.split(' ').slice(0, 2).join(' ');
-    step = 0; locked = false;
-    runStep(0);
-  }
-
-  function addMsg(en, pt, cls, replay) {
-    const chat = document.getElementById('chat');
-    const isBot = cls === 'b';
-    const row = document.createElement('div');
-    row.className = 'row' + (isBot ? '' : ' u');
-    const av = document.createElement('div');
-    av.className = 'sav ' + cls;
-    av.textContent = isBot ? '👩‍🏫' : '🧑‍💻';
-    const bub = document.createElement('div');
-    bub.className = 'bub ' + cls;
-    bub.innerHTML = `<div>${en}</div>${pt ? `<div class="tr">${pt}</div>` : ''}`;
-    if (replay && isBot) {
-      const rb = document.createElement('button');
-      rb.className = 'rbtn';
-      rb.innerHTML = '<i class="ti ti-refresh" style="font-size:13px"></i> Ouvir novamente';
-      rb.onclick = () => speak(en);
-      bub.appendChild(rb);
-    }
-    if (isBot) { row.appendChild(av); row.appendChild(bub); }
-    else { row.appendChild(bub); row.appendChild(av); }
-    chat.appendChild(row);
-    chat.scrollTop = chat.scrollHeight;
-  }
-
-  function showTyping() {
-    const chat = document.getElementById('chat');
-    const row = document.createElement('div');
-    row.className = 'row'; row.id = 'typr';
-    row.innerHTML = '<div class="sav b">👩‍🏫</div><div class="bub b"><div class="typing-dots"><span></span><span></span><span></span></div></div>';
-    chat.appendChild(row);
-    chat.scrollTop = chat.scrollHeight;
-  }
-  function rmTyping() { const t = document.getElementById('typr'); if (t) t.remove(); }
-
-  function setOpts(opts) {
-    const area = document.getElementById('opts');
-    area.innerHTML = '';
-    locked = false;
-    opts.forEach((o, i) => {
-      const b = document.createElement('button');
-      b.className = 'opt'; b.textContent = o;
-      b.onclick = () => pick(o, i);
-      area.appendChild(b);
-    });
-  }
-  function clearOpts() { document.getElementById('opts').innerHTML = ''; }
-
-  function updateProg() {
-    const pct = Math.round((step / lesson.length) * 100);
-    document.getElementById('pfill').style.width = pct + '%';
-    document.getElementById('plbl').textContent = step + ' / ' + lesson.length;
-  }
-
-  function runStep(s) {
-    if (s >= lesson.length) return;
-    const d = lesson[s];
-    updateProg(); clearOpts();
-    const delay = Math.min(1400, 700 + d.en.length * 10);
-    setTimeout(() => {
-      showTyping();
-      setTimeout(() => {
-        rmTyping();
-        addMsg(d.en, d.pt, 'b', true);
-        speak(d.en, () => setOpts(d.opts), true);
-      }, delay);
-    }, 200);
-  }
-
-  const corrections = [
-    "Not quite! The correct answer is: ",
-    "Almost! But the right answer is: ",
-    "Good try! The correct one is: ",
-    "Let's fix that — the right answer is: ",
-  ];
-
-  function pick(text, idx) {
-    if (locked) return;
-    locked = true;
-    clearOpts();
-    stopMic();
-    addMsg(text, '', 'u', false);
-
-    const d = lesson[step];
-    const isWrong = d.c !== undefined && idx !== d.c;
-
-    if (isWrong) {
-      const correct = d.opts[d.c];
-      const msg = corrections[Math.floor(Math.random() * corrections.length)] + '"' + correct + '"';
+function processInput(text) {
+  if (locked || !text.trim() || !cur) return;
+  locked = true; stopMic();
+  const t = cur.turns[turnIdx];
+  addMsg(text, '', 'u', false);
+  const reply = matchReply(text, t.p);
+  if (!reply) {
+    missCount++;
+    if (missCount >= 2) {
       speak(text, () => {
-        setTimeout(() => {
-          showTyping();
-          setTimeout(() => {
-            rmTyping();
-            addMsg(msg, '', 'b', false);
-            speak(msg, () => setOpts(d.opts), true);
-          }, 800);
-        }, 300);
+        const fb = t.fall || "I see! Let's keep going.";
+        showTyping();
+        setTimeout(() => { rmTyping(); addMsg(fb,'','b',false); speak(fb,()=>{turnIdx++;runTurn();},false); }, 600);
       });
     } else {
+      const retry = "Could you say that again? " + (t.hint || 'Try to use a few key words.');
       speak(text, () => {
-        setTimeout(() => {
-          step++; updateProg();
-          if (step < lesson.length) runStep(step);
-          else {
-            updateProg();
-            setTimeout(() => setOpts(['Recomeçar', 'Proxima aula']), 600);
-          }
-        }, 500);
+        showTyping();
+        setTimeout(() => { rmTyping(); addMsg(retry,'','b',false); speak(retry,()=>{locked=false;},true); }, 500);
       });
     }
+  } else {
+    speak(text, () => {
+      showTyping();
+      setTimeout(() => { rmTyping(); addMsg(reply,'','b',false); speak(reply,()=>{turnIdx++;runTurn();},false); }, 600);
+    });
   }
+}
 
-  function sendTxt() {
-    const inp = document.getElementById('tinp');
-    const v = inp.value.trim();
-    if (!v || locked) return;
-    inp.value = '';
-    pick(v, -1);
-  }
-
-  function stopMic() {
-    clearTimeout(silenceTimer);
-    clearTimeout(autoMicTimer);
-    if (recog) { try { recog.stop(); } catch(e){} }
-    micOn = false;
-    const btn = document.getElementById('mbtn');
-    if (btn) btn.classList.remove('on');
-  }
-
-  function startMic() {
-    if (locked) return;
-    if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) return;
-    stopMic();
-    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-    recog = new SR();
-    recog.lang = 'en-US';
-    recog.continuous = true;
-    recog.interimResults = false;
-    const btn = document.getElementById('mbtn');
-    btn.classList.add('on');
-    micOn = true;
-    document.getElementById('stxt').textContent = 'Ouvindo...';
-
-    recog.onresult = e => {
-      clearTimeout(silenceTimer);
-      const transcript = e.results[e.results.length - 1][0].transcript.trim();
-      if (transcript) {
-        stopMic();
-        const d = lesson[step];
-        const matchedIdx = d ? matchOptByVoice(transcript, d.opts) : -1;
-        if (matchedIdx >= 0) {
-          pick(d.opts[matchedIdx], matchedIdx);
-        } else {
-          document.getElementById('tinp').value = transcript;
-          sendTxt();
-        }
-      }
-    };
-
-    recog.onspeechend = () => {
-      silenceTimer = setTimeout(() => stopMic(), 1000);
-    };
-
-    recog.onerror = () => stopMic();
-    recog.onend = () => {
-      micOn = false;
-      btn.classList.remove('on');
-      document.getElementById('stxt').textContent = selectedVoice ? selectedVoice.name.split(' ').slice(0, 2).join(' ') : 'American English';
-    };
-
-    recog.start();
-  }
-
-  function toggleMic() {
-    if (micOn) { stopMic(); return; }
-    startMic();
-  }
-
-  function getSensLabel(v) {
-    v = parseInt(v);
-    if (v <= 20) return 'Fácil';
-    if (v <= 45) return 'Médio';
-    if (v <= 70) return 'Exigente';
-    return 'Estrito';
-  }
-
-  document.getElementById('opts').addEventListener('click', e => {
-    const o = e.target.closest('.opt');
-    if (!o) return;
-    if (o.textContent.includes('Recomeçar')) {
-      step = 0; locked = false;
-      stopMic();
-      document.getElementById('chat').innerHTML = '';
-      clearOpts(); updateProg(); runStep(0);
-    } else if (o.textContent.includes('Proxima aula')) {
-      addMsg("Coming soon! The next class (Alphabet & Numbers) is being prepared. Keep practicing this one!", "Em breve! A próxima aula está sendo preparada.", 'b', false);
-    }
+function endScenario() {
+  done.add(cur.id); renderLobby();
+  const msg = "Excellent work! You just completed the " + cur.title + " scenario. Your English conversation skills are improving every session. Would you like to try another situation?";
+  addMsg(msg, "Excelente! Você completou o cenário. Quer tentar outro?", 'b', false);
+  speak(msg, () => {
+    setTimeout(() => {
+      const btn = document.createElement('button');
+      btn.className = 'gbtn'; btn.style.cssText = 'margin:12px 16px;width:calc(100% - 32px)';
+      btn.innerHTML = '<i class="ti ti-arrow-left"></i> Back to scenarios';
+      btn.onclick = gotoLobby;
+      document.getElementById('chat').appendChild(btn);
+      document.getElementById('chat').scrollTop = 99999;
+    }, 400);
   });
+}
 
-  if (speechSynthesis.getVoices().length) loadVoices();
-  else speechSynthesis.addEventListener('voiceschanged', loadVoices);
+function updateProg() {
+  if (!cur) return;
+  const pct = Math.round((turnIdx / cur.turns.length) * 100);
+  document.getElementById('ptf').style.width = pct + '%';
+  document.getElementById('ptl').textContent = turnIdx + ' / ' + cur.turns.length;
+}
+
+function addMsg(text, pt, cls, replay) {
+  const chat = document.getElementById('chat');
+  const isBot = cls === 'b';
+  const row = document.createElement('div'); row.className = 'row'+(isBot?'':' u');
+  const av = document.createElement('div'); av.className = 'sav '+cls; av.textContent = isBot?'👩‍🏫':'🧑‍💻';
+  const bub = document.createElement('div'); bub.className = 'bub '+cls;
+  bub.innerHTML = `<div>${text}</div>${pt?`<div class="tr">${pt}</div>`:''}`;
+  if (replay && isBot) {
+    const rb = document.createElement('button'); rb.className = 'rbtn';
+    rb.innerHTML = '<i class="ti ti-refresh" style="font-size:12px"></i> Listen again';
+    rb.onclick = () => speak(text);
+    bub.appendChild(rb);
+  }
+  if (isBot) { row.appendChild(av); row.appendChild(bub); }
+  else { row.appendChild(bub); row.appendChild(av); }
+  chat.appendChild(row); chat.scrollTop = chat.scrollHeight;
+  return bub;
+}
+
+function showTyping() {
+  const chat = document.getElementById('chat');
+  const r = document.createElement('div'); r.id = 'typr'; r.className = 'row';
+  r.innerHTML = '<div class="sav b">👩‍🏫</div><div class="bub b"><div class="dots"><span></span><span></span><span></span></div></div>';
+  chat.appendChild(r); chat.scrollTop = chat.scrollHeight;
+}
+function rmTyping() { const t = document.getElementById('typr'); if (t) t.remove(); }
+
+function sendTxt() {
+  const inp = document.getElementById('tinp'), v = inp.value.trim(); if (!v) return;
+  inp.value = ''; processInput(v);
+}
+
+function stopMic() {
+  clearTimeout(silenceTimer); clearTimeout(autoMicTimer);
+  if (recog) { try { recog.stop(); } catch(e){} }
+  micOn = false;
+  const b = document.getElementById('mbtn'); if (b) b.classList.remove('on');
+}
+
+function startMic() {
+  if (locked) return;
+  if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) return;
+  stopMic();
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  recog = new SR(); recog.lang = 'en-US'; recog.continuous = true; recog.interimResults = false;
+  const b = document.getElementById('mbtn'); b.classList.add('on'); micOn = true;
+  document.getElementById('stxt').textContent = 'Listening...';
+  recog.onresult = e => {
+    clearTimeout(silenceTimer);
+    const t = e.results[e.results.length-1][0].transcript.trim();
+    if (t) { stopMic(); processInput(t); }
+  };
+  recog.onspeechend = () => { silenceTimer = setTimeout(stopMic, 1000); };
+  recog.onerror = stopMic;
+  recog.onend = () => {
+    micOn = false;
+    const b = document.getElementById('mbtn'); if (b) b.classList.remove('on');
+    document.getElementById('stxt').textContent = selectedVoice ? selectedVoice.name.split(' ').slice(0,2).join(' ') : 'American English';
+  };
+  recog.start();
+}
+
+function toggleMic() { if (micOn) { stopMic(); return; } startMic(); }
+function slabel(v) { if(v<=20)return'Easy'; if(v<=50)return'Medium'; if(v<=75)return'Strict'; return'Exact'; }
+
+if (speechSynthesis.getVoices().length) loadVoices();
+else speechSynthesis.addEventListener('voiceschanged', loadVoices);
 </script>
 </body>
 </html>
