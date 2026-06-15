@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>English A1 · Conversational Class</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f5f5f4;
+      --surface: #ffffff;
+      --surface2: #f0f0ef;
+      --border: rgba(0,0,0,0.1);
+      --border2: rgba(0,0,0,0.18);
+      --text: #1a1a1a;
+      --text2: #666;
+      --text3: #999;
+      --accent: #4F6EF7;
+      --accent-light: #EEF1FF;
+      --accent-dark: #3451D1;
+      --success: #22c55e;
+      --danger: #ef4444;
+      --radius: 12px;
+      --radius-sm: 8px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #1a1a1a;
+        --surface: #252525;
+        --surface2: #2e2e2e;
+        --border: rgba(255,255,255,0.1);
+        --border2: rgba(255,255,255,0.18);
+        --text: #f0f0f0;
+        --text2: #aaa;
+        --text3: #666;
+        --accent-light: #1e2a5e;
+      }
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      min-height: 100dvh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .shell {
+      width: 100%;
+      max-width: 520px;
+      background: var(--surface);
+      border-radius: var(--radius);
+      border: 0.5px solid var(--border);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      min-height: 92dvh;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    }
+
+    /* TOP BAR */
+    .topbar {
+      background: var(--surface);
+      border-bottom: 0.5px solid var(--border);
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+    .avatar {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: linear-gradient(135deg, #4F6EF7, #8B5CF6);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; flex-shrink: 0; position: relative;
+    }
+    .avatar .dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--success); border: 2px solid var(--surface);
+      position: absolute; bottom: 0; right: 0;
+    }
+    .tinfo { flex: 1; overflow: hidden; }
+    .tname { font-size: 15px; font-weight: 600; color: var(--text); white-space: nowrap; }
+    .tsub {
+      font-size: 12px; color: var(--text3);
+      display: flex; align-items: center; gap: 5px; margin-top: 1px;
+    }
+    .badge {
+      background: var(--accent-light); color: var(--accent);
+      font-size: 11px; font-weight: 600;
+      padding: 4px 10px; border-radius: 20px; white-space: nowrap;
+    }
+    .wave { display: flex; align-items: center; gap: 2px; height: 14px; }
+    .wave b {
+      width: 3px; border-radius: 3px; background: var(--accent);
+      height: 4px; display: block; transition: height .1s;
+    }
+    .wave.on b { animation: wv .5s ease-in-out infinite alternate; }
+    .wave.on b:nth-child(2) { animation-delay: .1s; }
+    .wave.on b:nth-child(3) { animation-delay: .2s; }
+    .wave.on b:nth-child(4) { animation-delay: .3s; }
+    @keyframes wv { to { height: 14px; } }
+
+    /* SETUP SCREEN */
+    .setup {
+      flex: 1; padding: 24px 18px;
+      display: flex; flex-direction: column; gap: 16px;
+      overflow-y: auto;
+    }
+    .setup-title { font-size: 18px; font-weight: 600; color: var(--text); }
+    .setup-sub { font-size: 14px; color: var(--text2); line-height: 1.6; }
+    .voice-list {
+      display: flex; flex-direction: column; gap: 8px;
+      max-height: 340px; overflow-y: auto;
+    }
+    .voice-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 11px 14px;
+      border: 0.5px solid var(--border); border-radius: var(--radius-sm);
+      background: var(--surface); cursor: pointer; transition: all .15s;
+    }
+    .voice-item:hover { border-color: var(--accent); }
+    .voice-item.selected { border-color: var(--accent); background: var(--accent-light); }
+    .voice-item.selected .vname { color: var(--accent); }
+    .vname { font-size: 14px; font-weight: 500; color: var(--text); flex: 1; }
+    .vtag { font-size: 11px; color: var(--text3); margin-top: 2px; }
+    .vtag .us { color: var(--accent); font-weight: 500; }
+    .test-btn {
+      padding: 6px 12px; border-radius: 12px;
+      border: 0.5px solid var(--border2);
+      background: transparent; color: var(--text2);
+      cursor: pointer; font-size: 12px; white-space: nowrap;
+      display: flex; align-items: center; gap: 4px;
+    }
+    .test-btn:hover { background: var(--surface2); }
+    .no-voice {
+      padding: 20px; text-align: center;
+      color: var(--text2); font-size: 14px; line-height: 1.7;
+      background: var(--surface2); border-radius: var(--radius-sm);
+    }
+    .start-btn {
+      padding: 14px; border-radius: var(--radius);
+      background: var(--accent); color: #fff;
+      border: none; font-size: 15px; font-weight: 600;
+      cursor: pointer; width: 100%; margin-top: auto;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      transition: background .15s;
+    }
+    .start-btn:hover { background: var(--accent-dark); }
+    .start-btn:disabled { opacity: .4; cursor: default; }
+
+    /* CLASS SCREEN */
+    .class-screen {
+      flex: 1; display: none;
+      flex-direction: column; overflow: hidden;
+    }
+    .prog-row {
+      background: var(--surface); border-bottom: 0.5px solid var(--border);
+      padding: 8px 18px; display: flex; align-items: center; gap: 10px;
+      flex-shrink: 0;
+    }
+    .ptrack {
+      flex: 1; height: 5px; background: var(--surface2);
+      border-radius: 4px; overflow: hidden;
+    }
+    .pfill {
+      height: 100%; background: var(--accent);
+      border-radius: 4px; transition: width .4s;
+      width: 0%;
+    }
+    .plbl { font-size: 12px; color: var(--text3); white-space: nowrap; }
+
+    .chat {
+      flex: 1; overflow-y: auto; padding: 16px 18px;
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    .row { display: flex; gap: 8px; align-items: flex-end; }
+    .row.u { flex-direction: row-reverse; }
+    .sav {
+      width: 30px; height: 30px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; flex-shrink: 0;
+    }
+    .sav.b { background: linear-gradient(135deg, #4F6EF7, #8B5CF6); }
+    .sav.u { background: var(--surface2); border: 0.5px solid var(--border); }
+    .bub {
+      max-width: 80%; padding: 12px 16px;
+      font-size: 14px; line-height: 1.65;
+    }
+    .bub.b {
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: 18px 18px 18px 4px;
+      color: var(--text);
+    }
+    .bub.u {
+      background: var(--accent);
+      color: #fff;
+      border-radius: 18px 18px 4px 18px;
+    }
+    .bub .tr { font-size: 12px; opacity: .55; margin-top: 5px; }
+    .rbtn {
+      display: inline-flex; align-items: center; gap: 4px;
+      margin-top: 7px; font-size: 11px; color: var(--accent);
+      background: none; border: none; cursor: pointer; padding: 0;
+    }
+    .typing-dots { display: flex; gap: 4px; padding: 2px 0; }
+    .typing-dots span {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--border2);
+      animation: dt .9s ease-in-out infinite;
+    }
+    .typing-dots span:nth-child(2) { animation-delay: .2s; }
+    .typing-dots span:nth-child(3) { animation-delay: .4s; }
+    @keyframes dt {
+      0%,80%,100% { transform: scale(.7); opacity: .4; }
+      40% { transform: scale(1); opacity: 1; }
+    }
+
+    .opts-row {
+      padding: 8px 18px 10px;
+      display: flex; flex-wrap: wrap; gap: 7px; flex-shrink: 0;
+    }
+    .opt {
+      padding: 9px 16px; border-radius: 20px;
+      border: 0.5px solid var(--accent);
+      background: var(--surface); color: var(--accent);
+      cursor: pointer; font-size: 13px; font-weight: 500;
+      transition: background .15s;
+    }
+    .opt:hover { background: var(--accent-light); }
+
+    .bbar {
+      background: var(--surface);
+      border-top: 0.5px solid var(--border);
+      padding: 10px 16px;
+      display: flex; align-items: center; gap: 8px;
+      flex-shrink: 0;
+    }
+    .mbtn {
+      width: 48px; height: 48px; border-radius: 50%;
+      background: var(--accent); border: none;
+      color: #fff; font-size: 20px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; transition: all .2s; position: relative;
+    }
+    .mbtn.on { background: var(--danger); }
+    .mbtn.on::after {
+      content: ''; position: absolute; inset: -5px;
+      border-radius: 50%;
+      border: 2px solid rgba(239,68,68,.35);
+      animation: pr 1s ease-in-out infinite;
+    }
+    @keyframes pr {
+      0%,100% { transform: scale(1); }
+      50% { transform: scale(1.12); }
+    }
+    .tinp {
+      flex: 1; border: 0.5px solid var(--border2);
+      border-radius: 22px; padding: 10px 16px;
+      font-size: 14px; background: var(--surface2);
+      color: var(--text); outline: none;
+    }
+    .tinp:focus { border-color: var(--accent); background: var(--surface); }
+    .sbtn {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: var(--accent); border: none;
+      color: #fff; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; flex-shrink: 0;
+    }
+    .sbtn:hover { background: var(--accent-dark); }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
+  </style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="avatar">👩‍🏫<div class="dot"></div></div>
+    <div class="tinfo">
+      <div class="tname">Ms. Sarah <span style="font-weight:400;font-size:13px;color:var(--text2)">· English Tutor</span></div>
+      <div class="tsub">
+        <div class="wave" id="wave"><b></b><b></b><b></b><b></b></div>
+        <span id="stxt">American English · A1</span>
+      </div>
+    </div>
+    <div class="badge">Class 1 · Greetings</div>
+  </div>
+
+  <!-- SETUP SCREEN -->
+  <div class="setup" id="setup-screen">
+    <div class="setup-title">Escolha a voz americana 🇺🇸</div>
+    <div class="setup-sub">
+      Seu sistema tem as seguintes vozes em inglês disponíveis. Clique em
+      <strong>Testar</strong> para ouvir cada uma e escolha a que soa mais
+      americana e natural para você.<br><br>
+      <strong>Dica:</strong> Use o <strong>Microsoft Edge</strong> para ter acesso
+      às vozes neurais americanas (Jenny, Aria) — a qualidade é a melhor disponível.
+    </div>
+    <div class="voice-list" id="voice-list">
+      <div class="no-voice">Carregando vozes... aguarde.</div>
+    </div>
+    <button class="start-btn" id="start-btn" disabled onclick="startClass()">
+      <i class="ti ti-player-play"></i> Iniciar aula com esta voz
+    </button>
+  </div>
+
+  <!-- CLASS SCREEN -->
+  <div class="class-screen" id="class-screen">
+    <div class="prog-row">
+      <div class="ptrack"><div class="pfill" id="pfill"></div></div>
+      <div class="plbl" id="plbl">0 / 9</div>
+    </div>
+    <div class="chat" id="chat"></div>
+    <div class="opts-row" id="opts"></div>
+    <div class="bbar">
+      <button class="mbtn" id="mbtn" onclick="toggleMic()" title="Clique para falar em inglês">
+        <i class="ti ti-microphone"></i>
+      </button>
+      <input class="tinp" type="text" id="tinp" placeholder="Ou escreva em inglês..." onkeydown="if(event.key==='Enter')sendTxt()" />
+      <button class="sbtn" onclick="sendTxt()"><i class="ti ti-send"></i></button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const lesson = [
+    { en:"Hey! Welcome to your first English class! I'm Ms. Sarah, your American tutor. Today we're learning greetings. Are you ready? 😊", pt:"Bem-vindo! Sou Ms. Sarah, sua tutora americana. Hoje aprenderemos saudações. Pronto?", opts:["Yes, I'm ready!","Let's do this!","I'm so excited!"] },
+    { en:"Awesome! Let's start with the basics. The most common greeting is — Hello! Say it with me: Hello! Now, how do you say 'Bom dia' in English?", pt:"Vamos começar! A saudação mais comum é 'Hello'. Como se diz 'Bom dia'?", opts:["Good morning!","Good night!","Good evening!"], c:0 },
+    { en:"Perfect! Good morning! ☀️ Americans say this before noon. Now — how do you ask someone 'Como você está?' in English?", pt:"Perfeito! Agora, como se pergunta 'Como você está?'", opts:["How are you?","What is your name?","Where are you from?"], c:0 },
+    { en:"Great question! Now if someone asks you 'How are you?' — what do you say back?", pt:"Se alguém perguntar 'How are you?', o que você responde?", opts:["I'm doing great, thanks!","I'm fine, thank you!","Not bad, and you?"] },
+    { en:"Love that energy! Now — introductions! In America, when you meet someone new, you say: Hi! My name is Sarah. What's your name? — Try introducing yourself!", pt:"Agora vamos às apresentações! Como você se apresenta?", opts:["Hi! My name is... Nice to meet you!","I am from Brazil!","Good morning!"], c:0 },
+    { en:"Wonderful! 🌟 And the response to 'Nice to meet you' is always 'Nice to meet you too!' — Now let's do a full dialogue. I'll start: Hey! What's up? 👋", pt:"Ótimo! Agora um diálogo completo. Eu começo: 'Hey! What's up?'", opts:["Hey! I'm doing good, and you?","Goodbye!","Good morning!"], c:0 },
+    { en:"I'm great, thanks! 😊 So — what is your name?", pt:"O que você responde?", opts:["My name is... and yours?","See you later!","Take care!"], c:0 },
+    { en:"Nice! And where are you from?", pt:"De onde você é?", opts:["I'm from Brazil! Nice to meet you!","Good evening!","Bye bye!"], c:0 },
+    { en:"Brazil! That's amazing! 🇧🇷 Alright, it's time to wrap up. How do you say goodbye?", pt:"Que legal! Como você se despede?", opts:["Goodbye! See you soon! 👋","It was great meeting you! Take care!","Bye! Have a great day!"] },
+    { en:"Absolutely perfect! 🏆 You just finished your first English conversation! You nailed greetings, introductions, and farewells — all in American English. You're doing amazing! 💪", pt:"Parabéns! Você completou a primeira aula! Saudações, apresentações e despedidas — perfeito!", opts:["Thank you, Ms. Sarah! 🙏","Can we do it again?","That was awesome!"] },
+  ];
+
+  let selectedVoice = null;
+  let allEnVoices = [];
+  let step = 0;
+  let locked = false;
+  let recog = null;
+  let micOn = false;
+
+  function scoreVoice(v) {
+    const n = v.name.toLowerCase();
+    let s = 0;
+    if (v.lang === 'en-US') s += 100;
+    else if (v.lang.startsWith('en')) s += 40;
+    if (n.includes('samantha')) s += 80;
+    if (n.includes('ava')) s += 75;
+    if (n.includes('allison')) s += 70;
+    if (n.includes('jenny')) s += 70;
+    if (n.includes('aria')) s += 68;
+    if (n.includes('zira')) s += 60;
+    if (n.includes('susan')) s += 55;
+    if (n.includes('karen')) s += 50;
+    if (n.includes('neural') || n.includes('natural')) s += 30;
+    if (n.includes('premium') || n.includes('enhanced')) s += 20;
+    if (n.includes('compact')) s -= 10;
+    return s;
+  }
+
+  function loadVoices() {
+    const all = speechSynthesis.getVoices();
+    allEnVoices = all.filter(v => v.lang.startsWith('en')).sort((a, b) => scoreVoice(b) - scoreVoice(a));
+    const list = document.getElementById('voice-list');
+    const btn = document.getElementById('start-btn');
+    if (allEnVoices.length === 0) {
+      list.innerHTML = '<div class="no-voice">Nenhuma voz em inglês encontrada.<br>Use <strong>Microsoft Edge</strong> ou <strong>Google Chrome</strong>.</div>';
+      return;
+    }
+    list.innerHTML = '';
+    allEnVoices.forEach((v, i) => {
+      if (i === 0) selectedVoice = v;
+      const isUS = v.lang === 'en-US';
+      const item = document.createElement('div');
+      item.className = 'voice-item' + (i === 0 ? ' selected' : '');
+      item.innerHTML = `
+        <div style="flex:1">
+          <div class="vname">${v.name}</div>
+          <div class="vtag">${v.lang}${isUS ? ' · <span class="us">American English ✓</span>' : ''}</div>
+        </div>
+        <button class="test-btn"><i class="ti ti-volume"></i> Testar</button>`;
+      item.querySelector('.test-btn').addEventListener('click', e => {
+        e.stopPropagation();
+        testVoice(v);
+      });
+      item.addEventListener('click', () => {
+        document.querySelectorAll('.voice-item').forEach(el => el.classList.remove('selected'));
+        item.classList.add('selected');
+        selectedVoice = v;
+        btn.disabled = false;
+      });
+      list.appendChild(item);
+    });
+    btn.disabled = false;
+  }
+
+  function testVoice(voice) {
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance("Hello! I'm Ms. Sarah, your American English tutor. Good morning, how are you today?");
+    u.voice = voice; u.lang = voice.lang; u.rate = 0.9; u.pitch = 1.05;
+    speechSynthesis.speak(u);
+  }
+
+  function speak(text, onEnd) {
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    if (selectedVoice) { u.voice = selectedVoice; u.lang = selectedVoice.lang; }
+    else u.lang = 'en-US';
+    u.rate = 0.88; u.pitch = 1.05; u.volume = 1;
+    const w = document.getElementById('wave');
+    const s = document.getElementById('stxt');
+    w.classList.add('on');
+    s.textContent = 'Speaking...';
+    u.onend = u.onerror = () => {
+      w.classList.remove('on');
+      s.textContent = selectedVoice ? selectedVoice.name.split(' ').slice(0, 2).join(' ') : 'American English';
+      if (onEnd) onEnd();
+    };
+    speechSynthesis.speak(u);
+  }
+
+  function startClass() {
+    document.getElementById('setup-screen').style.display = 'none';
+    const cs = document.getElementById('class-screen');
+    cs.style.display = 'flex';
+    if (selectedVoice) document.getElementById('stxt').textContent = selectedVoice.name.split(' ').slice(0, 2).join(' ');
+    step = 0; locked = false;
+    runStep(0);
+  }
+
+  function addMsg(en, pt, cls, replay) {
+    const chat = document.getElementById('chat');
+    const isBot = cls === 'b';
+    const row = document.createElement('div');
+    row.className = 'row' + (isBot ? '' : ' u');
+    const av = document.createElement('div');
+    av.className = 'sav ' + cls;
+    av.textContent = isBot ? '👩‍🏫' : '🧑‍💻';
+    const bub = document.createElement('div');
+    bub.className = 'bub ' + cls;
+    bub.innerHTML = `<div>${en}</div>${pt ? `<div class="tr">${pt}</div>` : ''}`;
+    if (replay && isBot) {
+      const rb = document.createElement('button');
+      rb.className = 'rbtn';
+      rb.innerHTML = '<i class="ti ti-refresh" style="font-size:13px"></i> Ouvir novamente';
+      rb.onclick = () => speak(en);
+      bub.appendChild(rb);
+    }
+    if (isBot) { row.appendChild(av); row.appendChild(bub); }
+    else { row.appendChild(bub); row.appendChild(av); }
+    chat.appendChild(row);
+    chat.scrollTop = chat.scrollHeight;
+  }
+
+  function showTyping() {
+    const chat = document.getElementById('chat');
+    const row = document.createElement('div');
+    row.className = 'row'; row.id = 'typr';
+    row.innerHTML = '<div class="sav b">👩‍🏫</div><div class="bub b"><div class="typing-dots"><span></span><span></span><span></span></div></div>';
+    chat.appendChild(row);
+    chat.scrollTop = chat.scrollHeight;
+  }
+  function rmTyping() { const t = document.getElementById('typr'); if (t) t.remove(); }
+
+  function setOpts(opts) {
+    const area = document.getElementById('opts');
+    area.innerHTML = '';
+    locked = false;
+    opts.forEach(o => {
+      const b = document.createElement('button');
+      b.className = 'opt'; b.textContent = o;
+      b.onclick = () => pick(o);
+      area.appendChild(b);
+    });
+  }
+  function clearOpts() { document.getElementById('opts').innerHTML = ''; }
+
+  function updateProg() {
+    const pct = Math.round((step / lesson.length) * 100);
+    document.getElementById('pfill').style.width = pct + '%';
+    document.getElementById('plbl').textContent = step + ' / ' + lesson.length;
+  }
+
+  function runStep(s) {
+    if (s >= lesson.length) return;
+    const d = lesson[s];
+    updateProg(); clearOpts();
+    const delay = Math.min(1400, 700 + d.en.length * 10);
+    setTimeout(() => {
+      showTyping();
+      setTimeout(() => {
+        rmTyping();
+        addMsg(d.en, d.pt, 'b', true);
+        speak(d.en, () => setOpts(d.opts));
+      }, delay);
+    }, 200);
+  }
+
+  function pick(text) {
+    if (locked) return;
+    locked = true; clearOpts();
+    addMsg(text, '', 'u', false);
+    speak(text);
+    setTimeout(() => {
+      step++; updateProg();
+      if (step < lesson.length) runStep(step);
+      else {
+        updateProg();
+        setTimeout(() => setOpts(['Recomeçar 🔄', 'Próxima aula →']), 600);
+      }
+    }, 1500);
+  }
+
+  function sendTxt() {
+    const inp = document.getElementById('tinp');
+    const v = inp.value.trim();
+    if (!v || locked) return;
+    inp.value = '';
+    pick(v);
+  }
+
+  function toggleMic() {
+    const btn = document.getElementById('mbtn');
+    if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
+      addMsg('Reconhecimento de voz indisponível. Use o Chrome ou Edge! 🎤', '', 'b', false);
+      return;
+    }
+    if (micOn) { if (recog) recog.stop(); micOn = false; btn.classList.remove('on'); return; }
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    recog = new SR();
+    recog.lang = 'en-US'; recog.interimResults = false;
+    btn.classList.add('on'); micOn = true;
+    document.getElementById('stxt').textContent = 'Ouvindo você...';
+    recog.onresult = e => {
+      document.getElementById('tinp').value = e.results[0][0].transcript;
+      sendTxt();
+    };
+    recog.onerror = recog.onend = () => {
+      micOn = false; btn.classList.remove('on');
+      document.getElementById('stxt').textContent = selectedVoice ? selectedVoice.name.split(' ').slice(0, 2).join(' ') : 'American English';
+    };
+    recog.start();
+  }
+
+  document.getElementById('opts').addEventListener('click', e => {
+    const o = e.target.closest('.opt');
+    if (!o) return;
+    if (o.textContent.includes('Recomeçar')) {
+      step = 0; locked = false;
+      document.getElementById('chat').innerHTML = '';
+      clearOpts(); updateProg(); runStep(0);
+    } else if (o.textContent.includes('Próxima aula')) {
+      addMsg("Coming soon! 🚧 The next class (Alphabet & Numbers) is being prepared. Keep practicing this one!", "Em breve! A próxima aula está sendo preparada.", 'b', false);
+    }
+  });
+
+  if (speechSynthesis.getVoices().length) loadVoices();
+  else speechSynthesis.addEventListener('voiceschanged', loadVoices);
+</script>
+</body>
+</html>
