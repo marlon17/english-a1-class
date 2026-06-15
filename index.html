@@ -324,6 +324,16 @@
     </div>
     <div class="chat" id="chat"></div>
     <div class="opts-row" id="opts"></div>
+    <div style="padding: 6px 18px 2px; display:flex; align-items:center; gap:10px; border-top: 0.5px solid var(--border);">
+      <i class="ti ti-adjustments-horizontal" style="font-size:14px; color:var(--text3); flex-shrink:0;"></i>
+      <span style="font-size:12px; color:var(--text3); white-space:nowrap;">Pronúncia</span>
+      <span style="font-size:11px; color:var(--text3); white-space:nowrap;">Fácil</span>
+      <input type="range" min="0" max="100" step="5" value="45" id="sens-slider"
+        style="flex:1; accent-color:var(--accent);"
+        oninput="sensitivity=parseInt(this.value); document.getElementById('sens-val').textContent=getSensLabel(this.value)" />
+      <span style="font-size:11px; color:var(--text3); white-space:nowrap;">Difícil</span>
+      <span style="font-size:12px; font-weight:500; color:var(--accent); min-width:36px; text-align:right;" id="sens-val">Médio</span>
+    </div>
     <div class="bbar">
       <button class="mbtn" id="mbtn" onclick="toggleMic()" title="Clique para falar em inglês">
         <i class="ti ti-microphone"></i>
@@ -357,6 +367,29 @@
   let micOn = false;
   let silenceTimer = null;
   let autoMicTimer = null;
+  let sensitivity = 45; // 0=muito fácil, 100=muito difícil
+
+  function norm(s) {
+    return s.toLowerCase().replace(/[^a-z0-9 ]/g, '').trim();
+  }
+
+  function similarity(a, b) {
+    const wa = norm(a).split(/\s+/).filter(Boolean);
+    const wb = norm(b).split(/\s+/).filter(Boolean);
+    if (!wa.length || !wb.length) return 0;
+    let matches = 0;
+    wa.forEach(w => { if (wb.some(x => x.includes(w) || w.includes(x))) matches++; });
+    return Math.round((matches / Math.max(wa.length, wb.length)) * 100);
+  }
+
+  function matchOptByVoice(transcript, opts) {
+    let best = -1, bestScore = -1;
+    opts.forEach((o, i) => {
+      const score = similarity(transcript, o);
+      if (score > bestScore) { bestScore = score; best = i; }
+    });
+    return bestScore >= (100 - sensitivity) ? best : -1;
+  }
 
   function scoreVoice(v) {
     const n = v.name.toLowerCase();
@@ -436,7 +469,7 @@
       w.classList.remove('on');
       s.textContent = selectedVoice ? selectedVoice.name.split(' ').slice(0, 2).join(' ') : 'American English';
       if (onEnd) onEnd();
-      if (autoMic) autoMicTimer = setTimeout(() => startMic(), 2000);
+      if (autoMic) autoMicTimer = setTimeout(() => startMic(), 1000);
     };
     speechSynthesis.speak(u);
   }
@@ -597,14 +630,20 @@
       clearTimeout(silenceTimer);
       const transcript = e.results[e.results.length - 1][0].transcript.trim();
       if (transcript) {
-        document.getElementById('tinp').value = transcript;
         stopMic();
-        sendTxt();
+        const d = lesson[step];
+        const matchedIdx = d ? matchOptByVoice(transcript, d.opts) : -1;
+        if (matchedIdx >= 0) {
+          pick(d.opts[matchedIdx], matchedIdx);
+        } else {
+          document.getElementById('tinp').value = transcript;
+          sendTxt();
+        }
       }
     };
 
     recog.onspeechend = () => {
-      silenceTimer = setTimeout(() => stopMic(), 2000);
+      silenceTimer = setTimeout(() => stopMic(), 1000);
     };
 
     recog.onerror = () => stopMic();
@@ -620,6 +659,14 @@
   function toggleMic() {
     if (micOn) { stopMic(); return; }
     startMic();
+  }
+
+  function getSensLabel(v) {
+    v = parseInt(v);
+    if (v <= 20) return 'Fácil';
+    if (v <= 45) return 'Médio';
+    if (v <= 70) return 'Exigente';
+    return 'Estrito';
   }
 
   document.getElementById('opts').addEventListener('click', e => {
