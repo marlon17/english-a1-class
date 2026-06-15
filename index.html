@@ -355,6 +355,8 @@
   let locked = false;
   let recog = null;
   let micOn = false;
+  let silenceTimer = null;
+  let autoMicTimer = null;
 
   function scoreVoice(v) {
     const n = v.name.toLowerCase();
@@ -418,7 +420,9 @@
     speechSynthesis.speak(u);
   }
 
-  function speak(text, onEnd) {
+  function speak(text, onEnd, autoMic) {
+    clearTimeout(autoMicTimer);
+    stopMic();
     speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text);
     if (selectedVoice) { u.voice = selectedVoice; u.lang = selectedVoice.lang; }
@@ -432,6 +436,7 @@
       w.classList.remove('on');
       s.textContent = selectedVoice ? selectedVoice.name.split(' ').slice(0, 2).join(' ') : 'American English';
       if (onEnd) onEnd();
+      if (autoMic) autoMicTimer = setTimeout(() => startMic(), 2000);
     };
     speechSynthesis.speak(u);
   }
@@ -483,10 +488,10 @@
     const area = document.getElementById('opts');
     area.innerHTML = '';
     locked = false;
-    opts.forEach(o => {
+    opts.forEach((o, i) => {
       const b = document.createElement('button');
       b.className = 'opt'; b.textContent = o;
-      b.onclick = () => pick(o);
+      b.onclick = () => pick(o, i);
       area.appendChild(b);
     });
   }
@@ -508,24 +513,53 @@
       setTimeout(() => {
         rmTyping();
         addMsg(d.en, d.pt, 'b', true);
-        speak(d.en, () => setOpts(d.opts));
+        speak(d.en, () => setOpts(d.opts), true);
       }, delay);
     }, 200);
   }
 
-  function pick(text) {
+  const corrections = [
+    "Not quite! The correct answer is: ",
+    "Almost! But the right answer is: ",
+    "Good try! The correct one is: ",
+    "Let's fix that — the right answer is: ",
+  ];
+
+  function pick(text, idx) {
     if (locked) return;
-    locked = true; clearOpts();
+    locked = true;
+    clearOpts();
+    stopMic();
     addMsg(text, '', 'u', false);
-    speak(text);
-    setTimeout(() => {
-      step++; updateProg();
-      if (step < lesson.length) runStep(step);
-      else {
-        updateProg();
-        setTimeout(() => setOpts(['Recomeçar 🔄', 'Próxima aula →']), 600);
-      }
-    }, 1500);
+
+    const d = lesson[step];
+    const isWrong = d.c !== undefined && idx !== d.c;
+
+    if (isWrong) {
+      const correct = d.opts[d.c];
+      const msg = corrections[Math.floor(Math.random() * corrections.length)] + '"' + correct + '"';
+      speak(text, () => {
+        setTimeout(() => {
+          showTyping();
+          setTimeout(() => {
+            rmTyping();
+            addMsg(msg, '', 'b', false);
+            speak(msg, () => setOpts(d.opts), true);
+          }, 800);
+        }, 300);
+      });
+    } else {
+      speak(text, () => {
+        setTimeout(() => {
+          step++; updateProg();
+          if (step < lesson.length) runStep(step);
+          else {
+            updateProg();
+            setTimeout(() => setOpts(['Recomeçar', 'Proxima aula']), 600);
+          }
+        }, 500);
+      });
+    }
   }
 
   function sendTxt() {
@@ -533,30 +567,59 @@
     const v = inp.value.trim();
     if (!v || locked) return;
     inp.value = '';
-    pick(v);
+    pick(v, -1);
+  }
+
+  function stopMic() {
+    clearTimeout(silenceTimer);
+    clearTimeout(autoMicTimer);
+    if (recog) { try { recog.stop(); } catch(e){} }
+    micOn = false;
+    const btn = document.getElementById('mbtn');
+    if (btn) btn.classList.remove('on');
+  }
+
+  function startMic() {
+    if (locked) return;
+    if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) return;
+    stopMic();
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    recog = new SR();
+    recog.lang = 'en-US';
+    recog.continuous = true;
+    recog.interimResults = false;
+    const btn = document.getElementById('mbtn');
+    btn.classList.add('on');
+    micOn = true;
+    document.getElementById('stxt').textContent = 'Ouvindo...';
+
+    recog.onresult = e => {
+      clearTimeout(silenceTimer);
+      const transcript = e.results[e.results.length - 1][0].transcript.trim();
+      if (transcript) {
+        document.getElementById('tinp').value = transcript;
+        stopMic();
+        sendTxt();
+      }
+    };
+
+    recog.onspeechend = () => {
+      silenceTimer = setTimeout(() => stopMic(), 2000);
+    };
+
+    recog.onerror = () => stopMic();
+    recog.onend = () => {
+      micOn = false;
+      btn.classList.remove('on');
+      document.getElementById('stxt').textContent = selectedVoice ? selectedVoice.name.split(' ').slice(0, 2).join(' ') : 'American English';
+    };
+
+    recog.start();
   }
 
   function toggleMic() {
-    const btn = document.getElementById('mbtn');
-    if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
-      addMsg('Reconhecimento de voz indisponível. Use o Chrome ou Edge! 🎤', '', 'b', false);
-      return;
-    }
-    if (micOn) { if (recog) recog.stop(); micOn = false; btn.classList.remove('on'); return; }
-    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-    recog = new SR();
-    recog.lang = 'en-US'; recog.interimResults = false;
-    btn.classList.add('on'); micOn = true;
-    document.getElementById('stxt').textContent = 'Ouvindo você...';
-    recog.onresult = e => {
-      document.getElementById('tinp').value = e.results[0][0].transcript;
-      sendTxt();
-    };
-    recog.onerror = recog.onend = () => {
-      micOn = false; btn.classList.remove('on');
-      document.getElementById('stxt').textContent = selectedVoice ? selectedVoice.name.split(' ').slice(0, 2).join(' ') : 'American English';
-    };
-    recog.start();
+    if (micOn) { stopMic(); return; }
+    startMic();
   }
 
   document.getElementById('opts').addEventListener('click', e => {
@@ -564,10 +627,11 @@
     if (!o) return;
     if (o.textContent.includes('Recomeçar')) {
       step = 0; locked = false;
+      stopMic();
       document.getElementById('chat').innerHTML = '';
       clearOpts(); updateProg(); runStep(0);
-    } else if (o.textContent.includes('Próxima aula')) {
-      addMsg("Coming soon! 🚧 The next class (Alphabet & Numbers) is being prepared. Keep practicing this one!", "Em breve! A próxima aula está sendo preparada.", 'b', false);
+    } else if (o.textContent.includes('Proxima aula')) {
+      addMsg("Coming soon! The next class (Alphabet & Numbers) is being prepared. Keep practicing this one!", "Em breve! A próxima aula está sendo preparada.", 'b', false);
     }
   });
 
